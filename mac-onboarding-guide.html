@@ -557,7 +557,7 @@
   <div class="toc-item"><span class="toc-num">07</span><a class="toc-title" href="#step6-docker-desktop裝好之後該看到什麼">STEP 6　Docker Desktop 裝好之後，該看到什麼？</a></div>
   <div class="toc-item"><span class="toc-num">08</span><a class="toc-title" href="#step7-git-nodejs與python為什麼要一起裝">STEP 7　Git、Node.js 與 Python 為什麼要一起裝？</a></div>
   <div class="toc-item"><span class="toc-num">09</span><a class="toc-title" href="#step8-git與github要怎麼設定才能協作">STEP 8　Git 與 GitHub 要怎麼設定才能協作？</a></div>
-  <div class="toc-item"><span class="toc-num">10</span><a class="toc-title" href="#computer-use是什麼為什麼前面八步是它的前置條件">Computer Use 是什麼，為什麼前面八步是它的前置條件？</a></div>
+  <div class="toc-item"><span class="toc-num">10</span><a class="toc-title" href="#computer-use能讓chatgpt直接操作你的mac嗎">Computer Use 能讓 ChatGPT 直接操作你的 Mac 嗎？</a></div>
   <div class="toc-item"><span class="toc-num">11</span><a class="toc-title" href="#八步都做完了怎麼確認沒有漏">八步都做完了，怎麼確認沒有漏？</a></div>
 </section>
 
@@ -875,6 +875,24 @@ python3 --version</code></pre>
 
   <p class="lead">AI agent 一次會改動好幾個檔案，Git 讓每一次修改都留下紀錄、隨時能退回上一版，這是放手讓 AI 動你的專案的前提。GitHub 則讓同一份程式碼能在你、隊友與其他機器之間同步，也是 AI agent 讀取專案脈絡與提交 Pull Request 的地方。</p>
 
+  <h2 id="六個名詞先講清楚">六個名詞先講清楚</h2>
+
+  <p>這六個字之後會不斷出現。先花兩分鐘看過，後面的指令才不會變成在背咒語。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>名詞</th><th>白話解釋</th></tr></thead>
+      <tbody>
+        <tr><td>repository（倉庫）</td><td>一個專案資料夾，加上它從第一天到現在的完整修改歷史。</td></tr>
+        <tr><td>commit（提交）</td><td>一個存檔點，記下「這一刻所有檔案長什麼樣」。</td></tr>
+        <tr><td>branch（分支）</td><td>一條平行的修改線，改壞了不會影響主線。</td></tr>
+        <tr><td>remote（遠端）</td><td>GitHub 上的那一份，用 push 與 pull 跟本機同步。</td></tr>
+        <tr><td>clone（複製）</td><td>把遠端那一份完整抓到自己電腦。</td></tr>
+        <tr><td>Pull Request</td><td>請別人看過你這批修改，再決定要不要併進主線。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2 id="設定你的git身分">設定你的 Git 身分</h2>
 
   <figure class="prompt">
@@ -884,6 +902,8 @@ python3 --version</code></pre>
 git config --global user.email "你的信箱"
 git config --global init.defaultBranch main</code></pre>
   </figure>
+
+  <p>第三行把新專案的預設分支名設成 <code>main</code>，與 GitHub 現在的預設一致，可以少一次改名。</p>
 
   <div class="callout">
     <strong>這裡填的資料會被公開。</strong>名字與信箱會寫進<strong>每一次</strong>提交紀錄，推上 GitHub 等公開平台之後無法私下撤回。不想公開真實信箱的人，請先到 GitHub 的帳號設定申請 <code>@users.noreply.github.com</code> 代理信箱，再填進上面第二行。
@@ -898,13 +918,17 @@ git config --global init.defaultBranch main</code></pre>
 gh auth login</code></pre>
   </figure>
 
-  <p><code>gh auth login</code> 是互動式的，用方向鍵與 Enter 依序選：<code>GitHub.com</code> → <code>SSH</code> → 讓它產生新的 SSH 金鑰 → <code>Login with a web browser</code> → 複製畫面上的一次性代碼 → 到瀏覽器貼上並授權。這一步會同時完成 SSH 金鑰產生、上傳到 GitHub 與 Git 憑證設定，你不必手動處理任何金鑰檔案。</p>
+  <p><code>gh auth login</code> 是互動式的，用方向鍵與 Enter 依序選：<code>GitHub.com</code> → <code>SSH</code> → 讓它產生新的 SSH 金鑰 → <code>Login with a web browser</code> → 複製畫面上的一次性代碼 → 到瀏覽器貼上並授權。</p>
 
-  <h2 id="最小協作流程">最小協作流程</h2>
+  <div class="callout">
+    <strong>為什麼不自己產生金鑰？</strong>多數教學會叫你先用 <code>ssh-keygen</code> 產生金鑰、複製公鑰、再貼到 GitHub 網頁的設定裡，那是三個各自都會出錯的步驟。<code>gh auth login</code> 把這三件事包進同一個問答流程，對新手失誤率低得多。手動流程仍然有效，只是不必在第一天學。
+  </div>
+
+  <h2 id="日常使用一個完整循環">日常使用：一個完整循環</h2>
 
   <div class="table-wrap">
     <table>
-      <thead><tr><th>動作</th><th>指令</th><th>這一步在做什麼</th></tr></thead>
+      <thead><tr><th>動作</th><th>指令</th><th>在做什麼</th></tr></thead>
       <tbody>
         <tr><td>取回專案</td><td><code>git clone &lt;網址&gt;</code></td><td>把 GitHub 上的專案抓到本機。</td></tr>
         <tr><td>開分支</td><td><code>git switch -c 分支名</code></td><td>在不動主線的前提下改東西。</td></tr>
@@ -912,6 +936,22 @@ gh auth login</code></pre>
         <tr><td>記錄一次修改</td><td><code>git add -A</code> 後 <code>git commit -m "訊息"</code></td><td>存成一個可回退的檢查點。</td></tr>
         <tr><td>推上雲端</td><td><code>git push -u origin 分支名</code></td><td>讓隊友看得到你的修改。</td></tr>
         <tr><td>開 Pull Request</td><td><code>gh pr create --draft</code></td><td>請人審這一批修改。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="改壞了怎麼退回">改壞了怎麼退回</h2>
+
+  <p>這一節是整章對 AI 使用者最有價值的部分。知道怎麼退回，你才敢放手讓它改。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>狀況</th><th>指令</th><th>說明</th></tr></thead>
+      <tbody>
+        <tr><td>還沒 commit，想全部丟掉</td><td><code>git restore .</code></td><td>所有檔案回到上一個存檔點。</td></tr>
+        <tr><td>想看做過哪些存檔點</td><td><code>git log --oneline</code></td><td>一行一個，前面那串是它的代碼。</td></tr>
+        <tr><td>想知道某次改了什麼</td><td><code>git show &lt;代碼&gt;</code></td><td>代碼取自上一行。</td></tr>
+        <tr><td>分支開錯了</td><td><code>git switch 分支名</code></td><td>切回去，已經 commit 的東西不會消失。</td></tr>
       </tbody>
     </table>
   </div>
@@ -930,74 +970,76 @@ git config --global --list</code></pre>
 </section>
 
 <!-- ═════════════ Chapter 10 ═════════════ -->
-<section class="chapter" id="computer-use是什麼為什麼前面八步是它的前置條件">
-  <div class="chapter-num">10 · Computer Use · 讓模型操作介面</div>
-  <h1>Computer Use 是什麼，為什麼前面八步是它的前置條件？</h1>
+<section class="chapter" id="computer-use能讓chatgpt直接操作你的mac嗎">
+  <div class="chapter-num">10 · Computer Use · 讓它直接動手</div>
+  <h1>Computer Use 能讓 ChatGPT 直接操作你的 Mac 嗎？</h1>
 
-  <p class="lead">Computer Use 讓模型操作瀏覽器與桌面介面，用來填表單、測試使用者流程，或透過 UI 完成任務。關鍵在於<strong>環境由你提供、動作由你執行</strong>——模型看的是截圖與工具結果，它只負責決定下一步該做什麼。</p>
+  <p class="lead">可以。Computer Use 讓 ChatGPT 直接看著畫面操作 Mac 上的 app，適合那些沒有指令可用、只能靠點擊完成的事。它不是前面八步的替代品——它刻意不能操作終端機，兩者補的是不同的洞。</p>
 
-  <p class="pull">模型不會自己動你的電腦，是你的程式替它動。</p>
+  <p class="pull">能用指令做的，留給終端機；只能用滑鼠做的，才交給它。</p>
 
-  <p>這一章是認識性的介紹，不是安裝步驟。它屬於開發者層級的能力，讀完你會知道它怎麼運作、需要什麼，以及該從哪裡開始。</p>
+  <h2 id="怎麼打開">怎麼打開</h2>
 
-  <h2 id="兩條整合路徑">兩條整合路徑</h2>
-
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>路徑</th><th>模型回傳什麼</th><th>你要做什麼</th></tr></thead>
-      <tbody>
-        <tr><td>程式碼執行（官方建議）</td><td>一段用 PyAutoGUI 或 Playwright 操作介面的程式碼</td><td>在隔離的瀏覽器或桌面環境執行它，回傳輸出與截圖。</td></tr>
-        <tr><td><code>computer</code> 工具</td><td>結構化的滑鼠與鍵盤動作</td><td>把這些動作翻譯成實際的輸入。</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p><code>computer</code> 工具可以要求的動作包含 <code>click</code>、<code>double_click</code>、<code>drag</code>、<code>move</code>、<code>scroll</code>、<code>keypress</code>、<code>type</code>、<code>wait</code> 與 <code>screenshot</code>。</p>
-
-  <h2 id="一個循環是三步">一個循環是三步</h2>
+  <p>Computer Use 在 ChatGPT 的 <strong>Work</strong> 與 <strong>Codex</strong> 方案中提供，且限支援的地區。</p>
 
   <ol>
-    <li>送出任務。</li>
-    <li>執行模型回傳的動作。</li>
-    <li>回傳更新後的截圖，其中 <code>call_id</code> 要對上剛才處理的那一筆，並用 <code>previous_response_id</code> 接續同一段對話。</li>
+    <li>開啟 ChatGPT 桌面 app，切換到 Work 或 Codex。</li>
+    <li>進入 <code>Plugins</code> → <code>Computer Use</code>。</li>
+    <li>如果出現提示，先按 <code>Install plugin</code>，再按 <code>Enable</code>。</li>
+    <li>把 MCP server 與 skill 的開關打開。</li>
+    <li>按 <code>Try now</code>。</li>
   </ol>
 
-  <p>第一次呼叫常常只會回一個 <code>screenshot</code> 動作。這時就照做、把目前畫面回傳，不要改動任何 UI。之後重複這個循環，直到模型不再回傳操作要求為止。</p>
+  <h2 id="兩個系統權限">兩個系統權限</h2>
 
-  <div class="callout">
-    <strong>新手最容易誤會的一點。</strong>API 對話的狀態與執行環境的狀態是<strong>兩套</strong>。接續一個回應不會還原瀏覽器 session、登入狀態或執行階段的變數，環境必須由你自己保持存活。
-  </div>
-
-  <h2 id="前面八步在這裡派上用場">前面八步在這裡派上用場</h2>
+  <p>第一次執行時 macOS 會跳出請求，也可以自己去開。路徑是「系統設定 →『隱私權與安全性』」，在<strong>螢幕錄製</strong>與<strong>輔助使用</strong>兩個項目底下，找到 <strong>Codex Computer Use</strong> 勾選。</p>
 
   <div class="table-wrap">
     <table>
-      <thead><tr><th>官方範例專案需要</th><th>來自哪一步</th></tr></thead>
+      <thead><tr><th>權限</th><th>作用</th></tr></thead>
       <tbody>
-        <tr><td>Python／PyAutoGUI 或 Node.js／Playwright</td><td>STEP 7</td></tr>
-        <tr><td>用 <code>git clone</code> 取回範例專案</td><td>STEP 8</td></tr>
-        <tr><td>隔離的執行環境（容器或虛擬機）</td><td>STEP 6</td></tr>
+        <tr><td>螢幕錄製</td><td>讓 ChatGPT 看得見目標 app 的畫面。</td></tr>
+        <tr><td>輔助使用</td><td>讓 ChatGPT 能點擊、輸入與操作介面。</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h2 id="安全上的四條規則">安全上的四條規則</h2>
+  <h2 id="每個app都要你點頭">每個 app 都要你點頭</h2>
+
+  <p>任務開始前，ChatGPT 會針對它要用的每個 app 個別徵求同意。可以選「Always allow」讓該 app 之後不再詢問；想收回時，到 app 設定裡的 Computer Use 區塊把它從清單移除。</p>
+
+  <h2 id="能做什麼不能做什麼">能做什麼、不能做什麼</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>適合交給它</th><th>它做不到</th></tr></thead>
+      <tbody>
+        <tr><td>測試 macOS app 或 iOS 模擬器的操作流程</td><td>自動化終端機 app</td></tr>
+        <tr><td>自動化瀏覽器上的任務</td><td>自動化 ChatGPT 自己</td></tr>
+        <tr><td>重現只在圖形介面才看得到的 bug</td><td>以管理員身分驗證</td></tr>
+        <tr><td>修改那些只能在 UI 裡點的設定</td><td>替你核准系統權限提示</td></tr>
+        <tr><td>取得外掛拿不到的資料</td><td>—</td></tr>
+        <tr><td>跨多個 app 的連續流程</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>在 macOS 上它可以在背景執行，你同時做別的事。</p>
 
   <div class="callout">
-    <ol>
-      <li><strong>限制環境。</strong>使用隔離的瀏覽器或虛擬機，並對可造訪的網站與可執行的動作設白名單，只開放任務真正需要的範圍。</li>
-      <li><strong>把螢幕內容當成不可信。</strong>頁面、文件或工具結果裡的文字不能授權任何事，也不能覆蓋你下達的指示。</li>
-      <li><strong>有後果的動作要先確認。</strong>購買、傳送資料與破壞性變更都應該由人決定；把敏感資訊打進表單也算是傳送。</li>
-      <li><strong>限制並驗證執行。</strong>設定步數、時間或成本上限，保留取消機制，最後檢查實際結果，不要只看模型給的結論。</li>
-    </ol>
+    <strong>安全上的幾件事。</strong>任務範圍盡量窄，一次針對一個 app 或一條流程。牽涉帳號、付款、憑證或安全設定時，人要在場。用不到的敏感 app 先關掉；如果它會用到已登入帳號的瀏覽器，換一個瀏覽器或先把原本那個關掉。每個權限提示都看過再按，「Always allow」只給你信任的 app。<strong>一旦發現它在操作錯的視窗，立刻取消任務。</strong>
+  </div>
+
+  <div class="callout">
+    <strong>它看得到什麼。</strong>Computer Use 拍下的截圖適用你既有的 ChatGPT 資料控制設定。任務進行期間，畫面內容、瀏覽器頁面與開啟的檔案都會成為 ChatGPT 的脈絡。檔案修改與 shell 指令仍然走 ChatGPT 原本的核准與沙箱設定。
   </div>
 
   <div class="takeaway">
-    <div class="takeaway-label">先把環境關好，再談自動化</div>
-    能操作介面的代理，能做到的事和能弄壞的事一樣多。先把範圍框小，再逐步放寬。
+    <div class="takeaway-label">它補的是滑鼠那一塊</div>
+    終端機的事還是回到前面八步，Computer Use 接手的是那些只能用點擊完成的工作。
   </div>
 
-  <p class="note">官方範例專案位於 <a href="https://github.com/openai/openai-cua-sample-app">github.com/openai/openai-cua-sample-app</a>，含 JavaScript／Playwright 與 Python／PyAutoGUI 兩種實作；安裝方式、桌面權限與支援環境請以該專案的 README 與 OpenAI 官方文件為準。</p>
+  <p class="note">完整說明見官方文件 <a href="https://learn.chatgpt.com/docs/computer-use">learn.chatgpt.com/docs/computer-use</a>；方案、地區與功能細節以官方為準。</p>
 </section>
 
 <!-- ═════════════ Chapter 11 ═════════════ -->
