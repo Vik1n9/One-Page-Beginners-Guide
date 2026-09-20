@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     LONG DOCUMENT · parchment design system · zh-TW
+     Mac 上手指南（Apple 晶片）
+     ================================================================== -->
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>第一次用 Mac？八個步驟把新機變成能跑 AI 的電腦</title>
+<meta name="description" content="Apple 晶片 Mac 新機上手八步：用 iPhone 登入 Apple 帳號、更新 macOS、安裝 Homebrew、ChatGPT 桌面 app、Ghostty、Docker Desktop、Git／Node.js／Python 與 GitHub 協作設定，每一步都說明為什麼要做。">
+<meta name="keywords" content="Mac 新手, Apple 晶片, Homebrew, ChatGPT 桌面 app, Codex, Ghostty, Docker Desktop, Node.js, Python, Git, GitHub, Computer Use">
+<meta name="generator" content="Kami">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="alternate icon" href="favicon.ico">
+<style>
+  /* Regular weight */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Bold weight - W05 for all bold variants */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  Mac 上手指南";
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --inline-code-bg: #f0eee6;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+    --serif: "Iansui", "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti TC", "Songti SC", "STSong", Georgia, serif;
+    --sans: var(--serif);
+
+    --rhythm-module:  14pt;
+    --rhythm-section: 18pt;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.3pt;
+    widows: 3;
+    orphans: 3;
+  }
+
+  .sans {
+    font-family: var(--sans);
+  }
+
+  /* ========== SITE NAV（螢幕限定，列印時隱藏） ========== */
+  .site-nav {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10pt 18pt;
+    flex-wrap: wrap;
+    padding-bottom: 8pt;
+    border-bottom: 0.6pt solid var(--border);
+    font-size: 9pt;
+    letter-spacing: 0.3pt;
+  }
+  .site-nav-brand { color: var(--brand); font-weight: 500; }
+  .site-nav-links { display: flex; flex-wrap: wrap; gap: 6pt 14pt; }
+  .site-nav-links a { color: var(--stone); text-decoration: none; }
+  .site-nav-links a:hover { color: var(--brand); }
+  .site-nav-links a[aria-current="page"] { color: var(--near-black); }
+  @media print { .site-nav { display: none; } }
+
+  /* ========== COVER ========== */
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1.5pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 36pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: 0.3pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.5;
+    max-width: 85%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.5;
+  }
+  .cover-meta strong {
+    color: var(--dark-warm);
+    font-weight: 500;
+  }
+
+  /* ========== TOC ========== */
+  .toc { break-after: page; }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: var(--rhythm-module);
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num {
+    color: var(--brand);
+    font-weight: 500;
+    min-width: 30pt;
+  }
+  .toc-title {
+    flex: 1;
+    color: var(--near-black);
+    padding-left: 6pt;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12pt;
+  }
+  .toc-title[href]::after {
+    content: target-counter(attr(href), page);
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  /* ========== HEADINGS ========== */
+  h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 10pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 8pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 6pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  h4 {
+    font-size: 11pt;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 14pt 0 5pt 0;
+    color: var(--olive);
+    break-after: avoid;
+  }
+
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  /* ========== PARAGRAPHS ========== */
+  p {
+    margin: 0 0 10pt 0;
+    line-height: 1.55;
+    color: var(--near-black);
+    widows: 2;
+    orphans: 2;
+  }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  .note {
+    font-size: 9pt;
+    color: var(--stone);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  a { color: var(--brand); }
+
+  /* ========== LISTS ========== */
+  ul, ol {
+    margin: 6pt 0 10pt 0;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  /* ========== CODE / PROMPT ========== */
+  code {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    background: var(--inline-code-bg);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  .prompt {
+    position: relative;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  .prompt figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: left;
+    margin: 0 0 4pt 0;
+    padding-right: 52pt;
+  }
+  .copy-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    color: var(--brand);
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 2pt 8pt;
+    cursor: pointer;
+  }
+  .copy-button:hover { background: var(--tag-bg); }
+  @media print { .copy-button { display: none; } }
+
+  /* ========== TABLE ========== */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12pt 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    break-inside: avoid;
+  }
+  table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 0.6pt solid var(--border);
+    background: transparent;
+  }
+  table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.25pt solid var(--border);
+    vertical-align: top;
+  }
+
+  /* ========== CALLOUT ========== */
+  .callout {
+    background: var(--ivory);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  /* ========== TAG ========== */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin-right: 4pt;
+  }
+
+  /* ========== EXECUTIVE SUMMARY ========== */
+  .exec-summary {
+    background: var(--ivory);
+    border-radius: 6pt;
+    padding: 16pt 20pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .exec-summary h2 {
+    margin-top: 0;
+    font-size: 13pt;
+  }
+
+  /* ========== FAQ / DETAILS ========== */
+  details {
+    border-bottom: 0.25pt solid var(--border);
+    padding: 7pt 0;
+    break-inside: avoid;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark-warm);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "＋";
+    color: var(--brand);
+    margin-right: 6pt;
+  }
+  details[open] summary::before { content: "－"; }
+  details > div { margin-top: 6pt; }
+  @media print { details > div { display: block !important; } }
+
+  /* ========== FIGURE / QUOTE / PULL ========== */
+  figure { margin: 14pt 0; break-inside: avoid; }
+  figure > figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: center;
+    margin-top: 6pt;
+    line-height: 1.45;
+  }
+  .prompt > figcaption { text-align: left; margin-top: 0; }
+  blockquote {
+    margin: 14pt 0;
+    padding: 0 18pt;
+    font-size: 12.5pt;
+    line-height: 1.5;
+    color: var(--olive);
+    break-inside: avoid;
+  }
+  blockquote .cite {
+    display: block;
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 5pt;
+  }
+  .pull {
+    font-size: 15pt;
+    line-height: 1.4;
+    color: var(--brand);
+    margin: 18pt 0;
+  }
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram { width: 100%; height: auto; display: block; }
+  @media print { .diagram { min-width: 0; } }
+
+  /* ========== CHAPTER BREAK ========== */
+  .chapter { break-before: page; }
+
+  /* ========== 手機（Kami 版面預設模擬 A4，需另補窄螢幕規則） ========== */
+  @media screen and (max-width: 640px) {
+    body { padding: 16px 18px 32px; font-size: 11pt; }
+    .cover { min-height: auto; padding-top: 14mm; }
+    .cover-title { font-size: 26pt; }
+    .cover-sub { font-size: 12pt; max-width: 100%; }
+    .cover-eyebrow { margin-bottom: 12pt; }
+    h1 { font-size: 19pt; }
+    h2 { font-size: 14pt; }
+    .lead { font-size: 11.5pt; }
+    /* 表格改為堆疊式：每列自成一組，欄名由 data-label 帶出，手機不需橫拖 */
+    .table-wrap { overflow-x: visible; }
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td { display: block; width: 100%; }
+    .table-wrap thead { display: none; }
+    .table-wrap tr {
+      padding: 8pt 0;
+      border-bottom: 0.6pt solid var(--border);
+    }
+    .table-wrap tbody tr:last-child { border-bottom: none; }
+    .table-wrap td {
+      border: 0;
+      padding: 2pt 0;
+    }
+    .table-wrap td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--sans);
+      font-size: 8.5pt;
+      color: var(--stone);
+      letter-spacing: 0.2pt;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ SITE NAV ═════════════ -->
+<nav class="site-nav" aria-label="全站導覽">
+  <span class="site-nav-brand">One-Page Beginners Guide</span>
+  <span class="site-nav-links">
+    <a href="us-stocks-guide.html">美股入門</a>
+    <a href="guide.html">AI 審圖</a>
+    <a href="making-of.html">製作幕後</a>
+    <a href="pcshop-ai-build-guide.html">PCShop</a>
+    <a href="beauty-manual-ai-guide.html">美容說明書</a>
+    <a href="deeptutor-guide.html">DeepTutor</a>
+    <a href="mac-onboarding-guide.html" aria-current="page">Mac 上手</a>
+    <a href="usj-vip-guide.html">USJ VIP</a>
+  </span>
+</nav>
+
+<!-- ═════════════ COVER ═════════════ -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Mac Onboarding · Apple 晶片新機</div>
+    <div class="cover-title">剛拆封的 Mac，<br>要先做哪八件事？</div>
+    <div class="cover-sub">沒用過 Mac 也能照做：用 iPhone 上的 Apple 帳號登入、先更新系統，再用一個 Homebrew 把 ChatGPT 桌面 app、Ghostty、Docker Desktop、Git／Node.js／Python 與 GitHub 協作環境一次補齊。</div>
+  </div>
+  <div class="cover-meta">
+    <strong>Apple 晶片專用 · 八個步驟 · 每步都寫為什麼</strong><br>
+    指南 12 · One-Page Beginners Guide<br>
+    帳號登入與權限授權涉及個人資料與本機檔案，動手前請自行確認
+  </div>
+</section>
+
+<!-- ═════════════ TOC ═════════════ -->
+<section class="toc">
+  <h2>目錄</h2>
+  <div class="toc-item"><span class="toc-num">01</span><a class="toc-title" href="#全新的mac為什麼不是開機就能用">全新的 Mac，為什麼不是開機就能用？</a></div>
+  <div class="toc-item"><span class="toc-num">02</span><a class="toc-title" href="#step1-如何用iphone把apple帳號帶進新mac">STEP 1　如何用 iPhone 把 Apple 帳號帶進新 Mac？</a></div>
+  <div class="toc-item"><span class="toc-num">03</span><a class="toc-title" href="#step2-為什麼第一件事是把macos更新到最新版">STEP 2　為什麼第一件事是把 macOS 更新到最新版？</a></div>
+  <div class="toc-item"><span class="toc-num">04</span><a class="toc-title" href="#step3-homebrew要怎麼裝才不會裝完找不到">STEP 3　Homebrew 要怎麼裝，才不會裝完找不到？</a></div>
+  <div class="toc-item"><span class="toc-num">05</span><a class="toc-title" href="#step4-安裝chatgpt桌面app把codex帶上桌面">STEP 4　安裝 ChatGPT 桌面 app，把 Codex 帶上桌面</a></div>
+  <div class="toc-item"><span class="toc-num">06</span><a class="toc-title" href="#step5-為什麼要把終端機換成ghostty">STEP 5　為什麼要把終端機換成 Ghostty？</a></div>
+  <div class="toc-item"><span class="toc-num">07</span><a class="toc-title" href="#step6-docker-desktop裝好之後該看到什麼">STEP 6　Docker Desktop 裝好之後，該看到什麼？</a></div>
+  <div class="toc-item"><span class="toc-num">08</span><a class="toc-title" href="#step7-git-nodejs與python為什麼要一起裝">STEP 7　Git、Node.js 與 Python 為什麼要一起裝？</a></div>
+  <div class="toc-item"><span class="toc-num">09</span><a class="toc-title" href="#step8-git與github要怎麼設定才能協作">STEP 8　Git 與 GitHub 要怎麼設定才能協作？</a></div>
+  <div class="toc-item"><span class="toc-num">10</span><a class="toc-title" href="#computer-use是什麼為什麼前面八步是它的前置條件">Computer Use 是什麼，為什麼前面八步是它的前置條件？</a></div>
+  <div class="toc-item"><span class="toc-num">11</span><a class="toc-title" href="#八步都做完了怎麼確認沒有漏">八步都做完了，怎麼確認沒有漏？</a></div>
+</section>
+
+<!-- ═════════════ Chapter 01 ═════════════ -->
+<section class="chapter" id="全新的mac為什麼不是開機就能用">
+  <div class="chapter-num">01 · Setup · 為什麼是這八步</div>
+  <h1>全新的 Mac，為什麼不是開機就能用？</h1>
+
+  <p class="lead">剛拆封的 Mac 出廠只帶瀏覽器與內建 app，AI 工具需要的安裝器、終端機、容器與程式執行環境一個都沒有。這八個步驟就是把缺口一次補齊，順序是照相依關係排的，不是照重要性排的。</p>
+
+  <p class="pull">裝什麼不難，難的是順序。</p>
+
+  <p>多數新手卡住的原因不是某個指令打錯，而是拿第三步的工具去做第六步的事。下面這張表先把全貌攤開，建議先看過一遍再動手。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>步驟</th><th>裝什麼</th><th>為什麼排在這裡</th></tr></thead>
+      <tbody>
+        <tr><td>STEP 1</td><td>Apple 帳號登入</td><td>先確定這台機器屬於你，後面的下載與授權才有對象。</td></tr>
+        <tr><td>STEP 2</td><td>macOS 系統更新</td><td>一次把版本拉到最新，後面六步的版本條件全部滿足。</td></tr>
+        <tr><td>STEP 3</td><td>Homebrew</td><td>後面五步全部靠它安裝，沒有它就得一個個手動下載。</td></tr>
+        <tr><td>STEP 4</td><td>ChatGPT 桌面 app</td><td>這是你操作 Codex 的地方，裝好就能開始用。</td></tr>
+        <tr><td>STEP 5</td><td>Ghostty</td><td>後面的指令都在這裡打，越早換越不用學兩套習慣。</td></tr>
+        <tr><td>STEP 6</td><td>Docker Desktop</td><td>提供用完即丟的乾淨環境，讓專案不會弄髒你的 Mac。</td></tr>
+        <tr><td>STEP 7</td><td>Git、Node.js、Python</td><td>AI 寫出來的程式要靠這三個才能真的跑起來。</td></tr>
+        <tr><td>STEP 8</td><td>GitHub 協作設定</td><td>讓每次修改都能回退，也才能和別人共用同一份程式碼。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    本頁只寫 <strong>Apple 晶片</strong>（M 系列）的 Mac。確認方式：點左上角 Apple 選單 →「關於這台 Mac」，晶片欄位看到 M 開頭的名稱就是。Intel Mac 的安裝路徑與本頁不同，請勿照做。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">照順序做，不要跳號</div>
+    每一步都假設前一步已經完成。跳過任何一步，後面的指令不會提示你漏了什麼，只會丟出一句看不懂的錯誤訊息。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 02 ═════════════ -->
+<section class="chapter" id="step1-如何用iphone把apple帳號帶進新mac">
+  <div class="chapter-num">02 · Step 1 · Apple 帳號</div>
+  <h1>STEP 1　如何用 iPhone 把 Apple 帳號帶進新 Mac？</h1>
+
+  <p class="lead">Apple 帳號是這台 Mac 之後下載 app、同步 iCloud 與使用「尋找」時的同一個身分，登錯就等於把你的資料分進兩個帳號。用 iPhone 上已經登入的那一組，可以省去重打密碼與等驗證碼，也避免在設定精靈裡手滑新建了第二個帳號。</p>
+
+  <p>這一章全部是點擊操作，沒有任何指令。新機第一次開機會自動進入「設定輔助程式」，照著走完即可。</p>
+
+  <h2 id="開機後的順序">開機後的順序</h2>
+
+  <ol>
+    <li>按下電源鍵（或直接掀開螢幕），選語言「繁體中文」、地區「台灣」。</li>
+    <li>連上 Wi-Fi。</li>
+    <li>畫面出現「快速開始」時，<strong>把 iPhone 靠近 Mac</strong>。</li>
+    <li>iPhone 跳出「設定新的 Mac」，點「繼續」。</li>
+    <li>用 iPhone 相機對準 Mac 畫面上的動畫圖樣。</li>
+    <li>在 Mac 上輸入你的 <strong>iPhone 解鎖密碼</strong>，Apple 帳號與 Wi-Fi 設定會一起帶過來。</li>
+    <li>建立這台 Mac 的<strong>本機使用者帳號</strong>與密碼。</li>
+    <li>依畫面指示設定 Touch ID，並開啟 FileVault 磁碟加密。</li>
+  </ol>
+
+  <h2 id="如果沒有出現快速開始">如果沒有出現「快速開始」</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>兩條路</th><th>什麼時候用</th><th>會被問到什麼</th></tr></thead>
+      <tbody>
+        <tr><td>快速開始（靠近 iPhone）</td><td>手邊有已登入同一個 Apple 帳號的 iPhone，且兩台都開著藍牙與 Wi-Fi</td><td>iPhone 解鎖密碼</td></tr>
+        <tr><td>手動輸入</td><td>沒有 iPhone 在手邊，或畫面沒跳出快速開始</td><td>Apple 帳號、密碼，以及送到其他 Apple 裝置上的兩步驟驗證碼</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>兩條路的結果完全相同，差別只在要打多少字。手動輸入時若收不到驗證碼，可在 iPhone 的「設定 → 你的名字 → 登入與安全性」確認信任裝置清單。</p>
+
+  <div class="callout">
+    <strong>這一步涉及你的帳號安全，請先讀完再操作。</strong>本機使用者帳號密碼與 Apple 帳號密碼是<strong>兩組不同的密碼</strong>，兩個都要自己記住。不要用別人的 Apple 帳號登入你的 Mac。兩步驟驗證碼不得轉述給任何人，包含自稱客服的來電。若這台 Mac 是二手或他人轉讓，務必先確認原持有者已經移除「啟用鎖定」，否則後面全部白做。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">確認你真的登入了</div>
+    點 Apple 選單 →「系統設定」，左上角出現你的名字與 Apple 帳號，就代表這一步完成了。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 03 ═════════════ -->
+<section class="chapter" id="step2-為什麼第一件事是把macos更新到最新版">
+  <div class="chapter-num">03 · Step 2 · 系統更新</div>
+  <h1>STEP 2　為什麼第一件事是把 macOS 更新到最新版？</h1>
+
+  <p class="lead">後面要裝的每個 app 都有最低 macOS 版本要求，版本不夠時 Homebrew 會直接拒絕安裝，而錯誤訊息不會告訴新手「去更新系統」。新機出廠通常停在出貨當時的版本，在這裡更新一次，後面六步的版本條件就全部滿足，不必再逐步檢查。</p>
+
+  <h2 id="更新步驟">更新步驟</h2>
+
+  <ol>
+    <li>Apple 選單 →「系統設定」。</li>
+    <li>左側選「一般」→ 右側選「軟體更新」。</li>
+    <li>等它檢查完畢（可能要一兩分鐘）。</li>
+    <li>出現「立即升級」或「立即更新」就按下去。</li>
+  </ol>
+
+  <p>更新期間 Mac 會自動重新開機數次，屬於正常現象，不要中途強制關機。整個過程通常需要 30 到 60 分鐘，視網路速度而定。</p>
+
+  <div class="callout">
+    開始前請插上電源，並確認重要檔案已經在 iCloud 或外接硬碟裡留有一份。更新進行中不要闔上螢幕，也不要讓 Mac 進入睡眠。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">更新一次，後面都不用再管版本</div>
+    這一步做完，本頁後面所有要安裝的東西都不會再因為系統版本被擋下來。之後不會再看到任何「需要 macOS 幾以上」的提醒。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 04 ═════════════ -->
+<section class="chapter" id="step3-homebrew要怎麼裝才不會裝完找不到">
+  <div class="chapter-num">04 · Step 3 · Homebrew</div>
+  <h1>STEP 3　Homebrew 要怎麼裝，才不會裝完找不到？</h1>
+
+  <p class="lead">macOS 的 App Store 拿不到開發工具，Homebrew 是用一行指令安裝、更新與移除這些工具的統一入口，後面五個步驟全部靠它。手動下載 dmg 一個個拖進「應用程式」不會留下任何紀錄，換機或重灌時你得靠記憶重來一次。</p>
+
+  <p>可以把它想成終端機世界的 App Store：你打一行字，它負責下載、解壓、放到正確位置，之後還能一次更新全部。</p>
+
+  <h2 id="先打開終端機">先打開終端機</h2>
+
+  <p>按 <code>Command + 空白鍵</code> 叫出搜尋列，輸入 <code>terminal</code>，按 Enter。這是 macOS 內建的終端機，先用它就好，Ghostty 要到 STEP 5 才裝。</p>
+
+  <h2 id="安裝homebrew">安裝 Homebrew</h2>
+
+  <figure class="prompt">
+    <figcaption>安裝 Homebrew（官方指令）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+  </figure>
+
+  <div class="callout">
+    這一行會從 Homebrew 官方網址下載安裝腳本並執行，所以<strong>只從官方網站 brew.sh 複製，不要從論壇貼文複製</strong>。過程中會要求輸入你的<strong>本機登入密碼</strong>；打字時畫面上不會顯示任何字元，這是正常的，打完直接按 Enter。它也可能順帶安裝 Xcode Command Line Tools，按 Enter 讓它跑完即可。
+  </div>
+
+  <h2 id="安裝完最關鍵的三行">安裝完最關鍵的三行</h2>
+
+  <figure class="prompt">
+    <figcaption>把 brew 加進搜尋路徑</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>echo &gt;&gt; ~/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"</code></pre>
+  </figure>
+
+  <div class="callout">
+    <strong>這是整頁最容易失敗的一步。</strong>Apple 晶片的 Homebrew 裝在 <code>/opt/homebrew</code>，而這個位置不在系統預設的搜尋路徑裡。安裝程式跑完後印出的 <strong>Next steps</strong> 就是上面這三行，多數新手直接關掉視窗，下次再打 <code>brew</code> 就得到 <code>zsh: command not found: brew</code>，然後以為安裝失敗、整個重來。
+  </div>
+
+  <h2 id="驗證">驗證</h2>
+
+  <figure class="prompt">
+    <figcaption>確認裝好了</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew --version
+which brew</code></pre>
+  </figure>
+
+  <p>第一行會印出版本號，第二行應該印出 <code>/opt/homebrew/bin/brew</code>。兩行都有正確輸出才算完成。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">一個入口，之後都用它</div>
+    日後想把所有工具更新到最新版，只要一行 <code>brew update &amp;&amp; brew upgrade</code>。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 05 ═════════════ -->
+<section class="chapter" id="step4-安裝chatgpt桌面app把codex帶上桌面">
+  <div class="chapter-num">05 · Step 4 · ChatGPT App</div>
+  <h1>STEP 4　安裝 ChatGPT 桌面 app，把 Codex 帶上桌面</h1>
+
+  <p class="lead">Codex 是能直接讀寫你電腦上專案檔案的編碼代理，桌面 app 比瀏覽器版多了與本機檔案系統連線這一層能力。用 Homebrew 安裝可以讓它跟其他工具一起被 <code>brew upgrade</code> 管理，不必自己記得去官網抓新版。</p>
+
+  <figure class="prompt">
+    <figcaption>安裝 ChatGPT 桌面 app</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install --cask chatgpt</code></pre>
+  </figure>
+
+  <h2 id="第一次開啟">第一次開啟</h2>
+
+  <ol>
+    <li>按 <code>Command + 空白鍵</code>，輸入 <code>ChatGPT</code>，按 Enter。</li>
+    <li>若跳出未驗證開發者的提示，到「系統設定 →『隱私權與安全性』」，往下捲找到該提示，按「仍要打開」。</li>
+    <li>用你的 OpenAI 帳號登入。</li>
+    <li>在 app 內切換到 Codex 模式。</li>
+  </ol>
+
+  <div class="callout">
+    <strong>授權範圍請從小開始。</strong>Codex 會直接修改你授權的資料夾內的檔案。第一次請先指向一個空的測試資料夾，實際看過它改了哪些東西，再放行真正的專案。不要在第一次就授權整個「文件」或「桌面」。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">確認你在 Codex 模式</div>
+    app 裡有多個模式，切錯了它就只會跟你聊天，不會碰你的檔案。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 06 ═════════════ -->
+<section class="chapter" id="step5-為什麼要把終端機換成ghostty">
+  <div class="chapter-num">06 · Step 5 · Ghostty</div>
+  <h1>STEP 5　為什麼要把終端機換成 Ghostty？</h1>
+
+  <p class="lead">內建的「終端機」能用，但跟 AI agent 長時間對話時，畫面刷新速度、中文字寬與分頁管理都會拖慢你判斷輸出的速度。換終端機是一次性成本，越早換越不用把操作習慣學兩遍。</p>
+
+  <figure class="prompt">
+    <figcaption>安裝 Ghostty</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install --cask ghostty</code></pre>
+  </figure>
+
+  <p>裝好後按 <code>Command + 空白鍵</code>，輸入 <code>Ghostty</code> 打開它。開著的時候在 Dock 上按右鍵 →「選項」→「保留在 Dock 中」，之後就不用再搜尋。</p>
+
+  <div class="callout">
+    <strong>順便做一個免費的驗收。</strong>在 Ghostty 裡再打一次 <code>brew --version</code>。有輸出，代表 STEP 3 的三行確實寫進了 <code>~/.zprofile</code>，而不是只在當時那個視窗生效。沒有輸出，就回 STEP 3 重跑那三行。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">之後的指令都打在這裡</div>
+    本頁後面所有指令都在 Ghostty 裡執行，內建的終端機可以關掉了。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 07 ═════════════ -->
+<section class="chapter" id="step6-docker-desktop裝好之後該看到什麼">
+  <div class="chapter-num">07 · Step 6 · Docker</div>
+  <h1>STEP 6　Docker Desktop 裝好之後，該看到什麼？</h1>
+
+  <p class="lead">許多專案與 AI agent 的說明都假設你能「在容器裡跑」，而容器等於一台用完即丟的乾淨電腦，讓專案的相依套件不會弄髒你的 Mac。Docker Desktop 同時提供背景引擎與圖形介面，沒有它，<code>docker</code> 指令沒有任何東西可以連。</p>
+
+  <figure class="prompt">
+    <figcaption>安裝 Docker Desktop</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install --cask docker-desktop</code></pre>
+  </figure>
+
+  <p>注意套件名稱是 <code>docker-desktop</code>，沒有名叫 <code>docker</code> 的 cask，打錯只會得到找不到的錯誤。</p>
+
+  <h2 id="第一次啟動">第一次啟動</h2>
+
+  <ol>
+    <li>到「應用程式」點開 Docker Desktop。</li>
+    <li>同意授權條款。</li>
+    <li>輸入本機密碼，讓它安裝背景元件。</li>
+    <li><strong>等螢幕右上角的選單列出現鯨魚圖示</strong>，那才代表引擎真的在跑。</li>
+  </ol>
+
+  <figure class="prompt">
+    <figcaption>驗證</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>docker --version
+docker run hello-world</code></pre>
+  </figure>
+
+  <p>第二行會下載一個極小的測試映像檔並執行，看到一段以 <code>Hello from Docker!</code> 開頭的訊息就成功了。</p>
+
+  <div class="callout">
+    Docker Desktop 的授權條款依使用情境而異，公司配發的電腦請先向 IT 確認再安裝。不使用時，從選單列的鯨魚圖示選 Quit，它在背景會持續佔用記憶體。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">看到鯨魚才算成功</div>
+    選單列沒有鯨魚圖示，<code>docker</code> 指令就連不上任何東西，再怎麼重打也沒用。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 08 ═════════════ -->
+<section class="chapter" id="step7-git-nodejs與python為什麼要一起裝">
+  <div class="chapter-num">08 · Step 7 · 執行環境</div>
+  <h1>STEP 7　Git、Node.js 與 Python 為什麼要一起裝？</h1>
+
+  <p class="lead">AI agent 幾乎都假設你的電腦上有 Git 可以記錄每次修改、有 Node.js 或 Python 可以實際執行它寫出來的程式。缺任何一個，對話會在中途停在 <code>command not found</code>，而新手無從判斷是 AI 寫錯了還是環境沒裝。</p>
+
+  <figure class="prompt">
+    <figcaption>一次裝好三個</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install git node python</code></pre>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>工具</th><th>Homebrew 名稱</th><th>版本</th><th>做什麼</th></tr></thead>
+      <tbody>
+        <tr><td>Git</td><td><code>git</code></td><td>2.55.0</td><td>記錄每一次修改，隨時可以退回上一版。</td></tr>
+        <tr><td>Node.js</td><td><code>node</code></td><td>26.9.0</td><td>執行 JavaScript／TypeScript 專案，附帶套件管理工具 <code>npm</code>。</td></tr>
+        <tr><td>Python</td><td><code>python</code></td><td>3.14.7</td><td>執行 Python 腳本，指令名稱是 <code>python3</code>。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    兩個容易混淆的地方。第一，macOS 內建的 <code>git</code> 是 Xcode Command Line Tools 附帶的版本，通常比較舊；用 Homebrew 裝過之後，<code>which git</code> 會指向 <code>/opt/homebrew/bin/git</code>。第二，Python 的指令是 <code>python3</code>，不是 <code>python</code>。
+  </div>
+
+  <figure class="prompt">
+    <figcaption>驗證</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>git --version
+node -v
+npm -v
+python3 --version</code></pre>
+  </figure>
+
+  <p>四行都印出版本號就代表完成。版本數字與上表不完全一致是正常的，它們會持續更新。</p>
+</section>
+
+<!-- ═════════════ Chapter 09 ═════════════ -->
+<section class="chapter" id="step8-git與github要怎麼設定才能協作">
+  <div class="chapter-num">09 · Step 8 · GitHub 協作</div>
+  <h1>STEP 8　Git 與 GitHub 要怎麼設定才能協作？</h1>
+
+  <p class="lead">AI agent 一次會改動好幾個檔案，Git 讓每一次修改都留下紀錄、隨時能退回上一版，這是放手讓 AI 動你的專案的前提。GitHub 則讓同一份程式碼能在你、隊友與其他機器之間同步，也是 AI agent 讀取專案脈絡與提交 Pull Request 的地方。</p>
+
+  <h2 id="設定你的git身分">設定你的 Git 身分</h2>
+
+  <figure class="prompt">
+    <figcaption>把名字與信箱寫進 Git 設定</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>git config --global user.name "你的名字"
+git config --global user.email "你的信箱"
+git config --global init.defaultBranch main</code></pre>
+  </figure>
+
+  <div class="callout">
+    <strong>這裡填的資料會被公開。</strong>名字與信箱會寫進<strong>每一次</strong>提交紀錄，推上 GitHub 等公開平台之後無法私下撤回。不想公開真實信箱的人，請先到 GitHub 的帳號設定申請 <code>@users.noreply.github.com</code> 代理信箱，再填進上面第二行。
+  </div>
+
+  <h2 id="安裝github-cli並登入">安裝 GitHub CLI 並登入</h2>
+
+  <figure class="prompt">
+    <figcaption>安裝並啟動登入流程</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install gh
+gh auth login</code></pre>
+  </figure>
+
+  <p><code>gh auth login</code> 是互動式的，用方向鍵與 Enter 依序選：<code>GitHub.com</code> → <code>SSH</code> → 讓它產生新的 SSH 金鑰 → <code>Login with a web browser</code> → 複製畫面上的一次性代碼 → 到瀏覽器貼上並授權。這一步會同時完成 SSH 金鑰產生、上傳到 GitHub 與 Git 憑證設定，你不必手動處理任何金鑰檔案。</p>
+
+  <h2 id="最小協作流程">最小協作流程</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>動作</th><th>指令</th><th>這一步在做什麼</th></tr></thead>
+      <tbody>
+        <tr><td>取回專案</td><td><code>git clone &lt;網址&gt;</code></td><td>把 GitHub 上的專案抓到本機。</td></tr>
+        <tr><td>開分支</td><td><code>git switch -c 分支名</code></td><td>在不動主線的前提下改東西。</td></tr>
+        <tr><td>看改了什麼</td><td><code>git status</code>、<code>git diff</code></td><td>確認 AI 動過哪些檔案。</td></tr>
+        <tr><td>記錄一次修改</td><td><code>git add -A</code> 後 <code>git commit -m "訊息"</code></td><td>存成一個可回退的檢查點。</td></tr>
+        <tr><td>推上雲端</td><td><code>git push -u origin 分支名</code></td><td>讓隊友看得到你的修改。</td></tr>
+        <tr><td>開 Pull Request</td><td><code>gh pr create --draft</code></td><td>請人審這一批修改。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="prompt">
+    <figcaption>驗證</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>gh auth status
+git config --global --list</code></pre>
+  </figure>
+
+  <div class="takeaway">
+    <div class="takeaway-label">先 commit，再讓 AI 動手</div>
+    養成動工前先 commit 一次的習慣。AI 改壞了只要 <code>git restore .</code> 就能回到原狀，不必從頭來過。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 10 ═════════════ -->
+<section class="chapter" id="computer-use是什麼為什麼前面八步是它的前置條件">
+  <div class="chapter-num">10 · Computer Use · 讓模型操作介面</div>
+  <h1>Computer Use 是什麼，為什麼前面八步是它的前置條件？</h1>
+
+  <p class="lead">Computer Use 讓模型操作瀏覽器與桌面介面，用來填表單、測試使用者流程，或透過 UI 完成任務。關鍵在於<strong>環境由你提供、動作由你執行</strong>——模型看的是截圖與工具結果，它只負責決定下一步該做什麼。</p>
+
+  <p class="pull">模型不會自己動你的電腦，是你的程式替它動。</p>
+
+  <p>這一章是認識性的介紹，不是安裝步驟。它屬於開發者層級的能力，讀完你會知道它怎麼運作、需要什麼，以及該從哪裡開始。</p>
+
+  <h2 id="兩條整合路徑">兩條整合路徑</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>路徑</th><th>模型回傳什麼</th><th>你要做什麼</th></tr></thead>
+      <tbody>
+        <tr><td>程式碼執行（官方建議）</td><td>一段用 PyAutoGUI 或 Playwright 操作介面的程式碼</td><td>在隔離的瀏覽器或桌面環境執行它，回傳輸出與截圖。</td></tr>
+        <tr><td><code>computer</code> 工具</td><td>結構化的滑鼠與鍵盤動作</td><td>把這些動作翻譯成實際的輸入。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><code>computer</code> 工具可以要求的動作包含 <code>click</code>、<code>double_click</code>、<code>drag</code>、<code>move</code>、<code>scroll</code>、<code>keypress</code>、<code>type</code>、<code>wait</code> 與 <code>screenshot</code>。</p>
+
+  <h2 id="一個循環是三步">一個循環是三步</h2>
+
+  <ol>
+    <li>送出任務。</li>
+    <li>執行模型回傳的動作。</li>
+    <li>回傳更新後的截圖，其中 <code>call_id</code> 要對上剛才處理的那一筆，並用 <code>previous_response_id</code> 接續同一段對話。</li>
+  </ol>
+
+  <p>第一次呼叫常常只會回一個 <code>screenshot</code> 動作。這時就照做、把目前畫面回傳，不要改動任何 UI。之後重複這個循環，直到模型不再回傳操作要求為止。</p>
+
+  <div class="callout">
+    <strong>新手最容易誤會的一點。</strong>API 對話的狀態與執行環境的狀態是<strong>兩套</strong>。接續一個回應不會還原瀏覽器 session、登入狀態或執行階段的變數，環境必須由你自己保持存活。
+  </div>
+
+  <h2 id="前面八步在這裡派上用場">前面八步在這裡派上用場</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>官方範例專案需要</th><th>來自哪一步</th></tr></thead>
+      <tbody>
+        <tr><td>Python／PyAutoGUI 或 Node.js／Playwright</td><td>STEP 7</td></tr>
+        <tr><td>用 <code>git clone</code> 取回範例專案</td><td>STEP 8</td></tr>
+        <tr><td>隔離的執行環境（容器或虛擬機）</td><td>STEP 6</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="安全上的四條規則">安全上的四條規則</h2>
+
+  <div class="callout">
+    <ol>
+      <li><strong>限制環境。</strong>使用隔離的瀏覽器或虛擬機，並對可造訪的網站與可執行的動作設白名單，只開放任務真正需要的範圍。</li>
+      <li><strong>把螢幕內容當成不可信。</strong>頁面、文件或工具結果裡的文字不能授權任何事，也不能覆蓋你下達的指示。</li>
+      <li><strong>有後果的動作要先確認。</strong>購買、傳送資料與破壞性變更都應該由人決定；把敏感資訊打進表單也算是傳送。</li>
+      <li><strong>限制並驗證執行。</strong>設定步數、時間或成本上限，保留取消機制，最後檢查實際結果，不要只看模型給的結論。</li>
+    </ol>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">先把環境關好，再談自動化</div>
+    能操作介面的代理，能做到的事和能弄壞的事一樣多。先把範圍框小，再逐步放寬。
+  </div>
+
+  <p class="note">官方範例專案位於 <a href="https://github.com/openai/openai-cua-sample-app">github.com/openai/openai-cua-sample-app</a>，含 JavaScript／Playwright 與 Python／PyAutoGUI 兩種實作；安裝方式、桌面權限與支援環境請以該專案的 README 與 OpenAI 官方文件為準。</p>
+</section>
+
+<!-- ═════════════ Chapter 11 ═════════════ -->
+<section class="chapter" id="八步都做完了怎麼確認沒有漏">
+  <div class="chapter-num">11 · Checklist · 一次全部驗收</div>
+  <h1>八步都做完了，怎麼確認沒有漏？</h1>
+
+  <p class="lead">把下面整段貼進 Ghostty 執行一次，七行各自印出一段結果就代表全部到位。有任何一行沒有輸出或報錯，對照後面的排查表回到對應步驟。</p>
+
+  <figure class="prompt">
+    <figcaption>一次驗收全部</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew --version
+brew list --cask
+docker --version
+git --version
+node -v
+python3 --version
+gh auth status</code></pre>
+  </figure>
+
+  <h2 id="常見症狀排查">常見症狀排查</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>看到什麼</th><th>回到哪一步</th></tr></thead>
+      <tbody>
+        <tr><td><code>zsh: command not found: brew</code></td><td>STEP 3 的三行 PATH 設定沒跑，回去補跑。</td></tr>
+        <tr><td><code>cask requires macOS &gt;= …</code></td><td>STEP 2 跳過了，回去更新系統。</td></tr>
+        <tr><td><code>Cannot connect to the Docker daemon</code></td><td>Docker Desktop 沒開，選單列上沒有鯨魚圖示。</td></tr>
+        <tr><td><code>git push</code> 要求輸入帳號密碼</td><td>STEP 8 的 <code>gh auth login</code> 沒完成。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">之後只要一行</div>
+    全部裝好之後，日常維護只需要 <code>brew update &amp;&amp; brew upgrade</code>，它會把這頁裝過的東西一起更新。
+  </div>
+
+  <p class="note">本頁的版本號與套件名稱查核日為 2026-09-20。安裝前可用 <code>brew info &lt;名稱&gt;</code> 自行確認目前版本，各工具的官方文件為最終依據。</p>
+</section>
+
+
+<script>
+  /* 手機版表格：把表頭寫進每個儲存格的 data-label，配合 CSS 改為堆疊顯示 */
+  document.querySelectorAll('.table-wrap table').forEach(function (table) {
+    var heads = Array.prototype.map.call(table.querySelectorAll('thead th'), function (th) {
+      return th.textContent.trim();
+    });
+    if (!heads.length) return;
+    Array.prototype.forEach.call(table.querySelectorAll('tbody tr'), function (tr) {
+      Array.prototype.forEach.call(tr.children, function (cell, i) {
+        if (heads[i]) cell.setAttribute('data-label', heads[i]);
+      });
+    });
+  });
+
+  document.querySelectorAll('.copy-button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('code');
+      if (!code || !navigator.clipboard) return;
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        var original = btn.textContent;
+        btn.textContent = '已複製';
+        setTimeout(function () { btn.textContent = original; }, 1600);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
