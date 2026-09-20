@@ -98,25 +98,6 @@
     font-family: var(--sans);
   }
 
-  /* ========== SITE NAV（螢幕限定，列印時隱藏） ========== */
-  .site-nav {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 10pt 18pt;
-    flex-wrap: wrap;
-    padding-bottom: 8pt;
-    border-bottom: 0.6pt solid var(--border);
-    font-size: 9pt;
-    letter-spacing: 0.3pt;
-  }
-  .site-nav-brand { color: var(--brand); font-weight: 500; }
-  .site-nav-links { display: flex; flex-wrap: wrap; gap: 6pt 14pt; }
-  .site-nav-links a { color: var(--stone); text-decoration: none; }
-  .site-nav-links a:hover { color: var(--brand); }
-  .site-nav-links a[aria-current="page"] { color: var(--near-black); }
-  @media print { .site-nav { display: none; } }
-
   /* ========== COVER ========== */
   .cover {
     min-height: 240mm;
@@ -685,21 +666,6 @@
 </style>
 </head>
 <body>
-
-<!-- ═════════════ SITE NAV ═════════════ -->
-<nav class="site-nav" aria-label="全站導覽">
-  <span class="site-nav-brand">One-Page Beginners Guide</span>
-  <span class="site-nav-links">
-    <a href="us-stocks-guide.html" aria-current="page">美股入門</a>
-    <a href="guide.html">AI 審圖</a>
-    <a href="making-of.html">製作幕後</a>
-    <a href="pcshop-ai-build-guide.html">PCShop</a>
-    <a href="beauty-manual-ai-guide.html">美容說明書</a>
-    <a href="deeptutor-guide.html">DeepTutor</a>
-    <a href="mac-onboarding-guide.html">Mac 上手</a>
-    <a href="usj-vip-guide.html">USJ VIP</a>
-  </span>
-</nav>
 
 <!-- ═════════════ COVER ═════════════ -->
 <section class="cover">

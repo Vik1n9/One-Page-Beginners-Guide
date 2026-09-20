@@ -56,7 +56,6 @@ register: brand
 
 ## Components
 
-- `.site-nav`：站內導覽列，parchment 底、hairline 底線、ink-blue 連結，`@media print` 隱藏。這是 Kami 原生沒有、本站自行新增的元件。
 - `.exec-summary`：首章的執行摘要框。
 - `.callout`：ivory 填色說明框。`.takeaway`：章節結論框，配 `.takeaway-label`。
 - `.prompt`：prompt／程式碼區塊，`figcaption` 在上、`pre` 在下、右上角 `.copy-button` 複製鈕（列印時隱藏）。

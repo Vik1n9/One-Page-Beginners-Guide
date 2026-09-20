@@ -24,7 +24,7 @@ Considered, editorial, print-minded. 視覺語氣像一份排版講究的印刷�
 
 1. Document first: 每頁以封面與目錄開場，快速交代主題、讀者、可完成的事情。
 2. Reading remains primary: 版面只服務閱讀節奏與查找，不遮擋、不延遲內容。
-3. One system, many documents: 各頁保留各自內容，但共享 Kami 的導覽、字體、色票與元件語彙；大阪旅遊系列是自成一格的例外。
+3. One system, many documents: 各頁保留各自內容，但共享 Kami 的字體、色票與元件語彙；大阪旅遊系列是自成一格的例外。
 4. Rules live in the repo: 後續改版必須先讀 `PRODUCT.md` 與 `DESIGN.md`，再修改頁面。
 5. Human verification is visible: 涉及投資、法規、合規、AI 產出時，保留人工複核與限制說明。
 
