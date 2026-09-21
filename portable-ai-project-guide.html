@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     PORTABLE AI PROJECT · parchment design system · zh-TW
+     別讓專案活在對話裡：用資料夾與 git 管理 AI 專案的六個步驟
+     ================================================================== -->
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>別讓專案活在對話裡：用資料夾與 git 管理 AI 專案的六個步驟</title>
+<meta name="description" content="六個步驟把 AI 專案從對話搬進資料夾：AGENTS.md 寫規矩、Skill 寫做法、MCP 與 Plugins 寫連線、repomix 打包交接、opencode 驗證可攜性。一次 git clone 還原整個工作環境。">
+<meta name="keywords" content="AGENTS.md, Agent Skills, MCP, Plugins, opencode, repomix, rtk, skills.sh, git, AI 專案管理, Codex, Claude Code, Cursor, 可攜性">
+<meta name="generator" content="Kami">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="alternate icon" href="favicon.ico">
+<style>
+  /* Regular weight */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Bold weight - W05 for all bold variants */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  讓專案活在資料夾裡";
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --inline-code-bg: #f0eee6;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+    --serif: "Iansui", "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti TC", "Songti SC", "STSong", Georgia, serif;
+    --sans: var(--serif);
+
+    --rhythm-module:  14pt;
+    --rhythm-section: 18pt;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.3pt;
+    widows: 3;
+    orphans: 3;
+  }
+
+  .sans {
+    font-family: var(--sans);
+  }
+
+  /* ========== COVER ========== */
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1.5pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 36pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: 0.3pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.5;
+    max-width: 85%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.5;
+  }
+  .cover-meta strong {
+    color: var(--dark-warm);
+    font-weight: 500;
+  }
+
+  /* ========== TOC ========== */
+  .toc { break-after: page; }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: var(--rhythm-module);
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num {
+    color: var(--brand);
+    font-weight: 500;
+    min-width: 30pt;
+  }
+  .toc-title {
+    flex: 1;
+    color: var(--near-black);
+    padding-left: 6pt;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12pt;
+  }
+  .toc-title[href]::after {
+    content: target-counter(attr(href), page);
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  /* ========== HEADINGS ========== */
+  h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 10pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 8pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 6pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  h4 {
+    font-size: 11pt;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 14pt 0 5pt 0;
+    color: var(--olive);
+    break-after: avoid;
+  }
+
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  /* ========== PARAGRAPHS ========== */
+  p {
+    margin: 0 0 10pt 0;
+    line-height: 1.55;
+    color: var(--near-black);
+    widows: 2;
+    orphans: 2;
+  }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  .note {
+    font-size: 9pt;
+    color: var(--stone);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  a { color: var(--brand); }
+
+  /* ========== LISTS ========== */
+  ul, ol {
+    margin: 6pt 0 10pt 0;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  /* ========== CODE / PROMPT ========== */
+  code {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    background: var(--inline-code-bg);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  .prompt {
+    position: relative;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  .prompt figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: left;
+    margin: 0 0 4pt 0;
+    padding-right: 52pt;
+  }
+  .copy-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    color: var(--brand);
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 2pt 8pt;
+    cursor: pointer;
+  }
+  .copy-button:hover { background: var(--tag-bg); }
+  @media print { .copy-button { display: none; } }
+
+  /* ========== TABLE ========== */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12pt 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    break-inside: avoid;
+  }
+  table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 0.6pt solid var(--border);
+    background: transparent;
+  }
+  table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.25pt solid var(--border);
+    vertical-align: top;
+  }
+
+  /* ========== CALLOUT ========== */
+  .callout {
+    background: var(--ivory);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  /* ========== TAG ========== */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin-right: 4pt;
+  }
+
+  /* ========== EXECUTIVE SUMMARY ========== */
+  .exec-summary {
+    background: var(--ivory);
+    border-radius: 6pt;
+    padding: 16pt 20pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .exec-summary h2 {
+    margin-top: 0;
+    font-size: 13pt;
+  }
+
+  /* ========== FAQ / DETAILS ========== */
+  details {
+    border-bottom: 0.25pt solid var(--border);
+    padding: 7pt 0;
+    break-inside: avoid;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark-warm);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "＋";
+    color: var(--brand);
+    margin-right: 6pt;
+  }
+  details[open] summary::before { content: "－"; }
+  details > div { margin-top: 6pt; }
+  @media print { details > div { display: block !important; } }
+
+  /* ========== FIGURE / QUOTE / PULL ========== */
+  figure { margin: 14pt 0; break-inside: avoid; }
+  figure > figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: center;
+    margin-top: 6pt;
+    line-height: 1.45;
+  }
+  .prompt > figcaption { text-align: left; margin-top: 0; }
+  blockquote {
+    margin: 14pt 0;
+    padding: 0 18pt;
+    font-size: 12.5pt;
+    line-height: 1.5;
+    color: var(--olive);
+    break-inside: avoid;
+  }
+  blockquote .cite {
+    display: block;
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 5pt;
+  }
+  .pull {
+    font-size: 15pt;
+    line-height: 1.4;
+    color: var(--brand);
+    margin: 18pt 0;
+  }
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram { width: 100%; height: auto; display: block; }
+  @media print { .diagram { min-width: 0; } }
+
+  /* ========== CHAPTER BREAK ========== */
+  .chapter { break-before: page; }
+
+  /* ========== 手機（Kami 版面預設模擬 A4，需另補窄螢幕規則） ========== */
+  @media screen and (max-width: 640px) {
+    body { padding: 16px 18px 32px; font-size: 11pt; }
+    .cover { min-height: auto; padding-top: 14mm; }
+    .cover-title { font-size: 26pt; }
+    .cover-sub { font-size: 12pt; max-width: 100%; }
+    .cover-eyebrow { margin-bottom: 12pt; }
+    h1 { font-size: 19pt; }
+    h2 { font-size: 14pt; }
+    .lead { font-size: 11.5pt; }
+    /* 表格改為堆疊式：每列自成一組，欄名由 data-label 帶出，手機不需橫拖 */
+    .table-wrap { overflow-x: visible; }
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td { display: block; width: 100%; }
+    .table-wrap thead { display: none; }
+    .table-wrap tr {
+      padding: 8pt 0;
+      border-bottom: 0.6pt solid var(--border);
+    }
+    .table-wrap tbody tr:last-child { border-bottom: none; }
+    .table-wrap td {
+      border: 0;
+      padding: 2pt 0;
+    }
+    .table-wrap td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--sans);
+      font-size: 8.5pt;
+      color: var(--stone);
+      letter-spacing: 0.2pt;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ COVER ═════════════ -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Portable AI Project · 別讓專案活在對話裡</div>
+    <div class="cover-title">換一個 AI，<br>你的專案還在嗎？</div>
+    <div class="cover-sub">六個步驟把專案狀態從對話搬進資料夾與 git：AGENTS.md 寫規矩、Skill 寫做法、MCP 與 Plugins 寫連線、repomix 打包交接、opencode 驗證可攜性。一次 git clone 還原整個工作環境。</div>
+  </div>
+  <div class="cover-meta">
+    <strong>六個步驟 · 每步都寫為什麼</strong><br>
+    指南 13 · One-Page Beginners Guide
+  </div>
+</section>
+
+<!-- ═════════════ TOC ═════════════ -->
+<section class="toc">
+  <h2>目錄</h2>
+  <div class="toc-item"><span class="toc-num">01</span><a class="toc-title" href="#為什麼不能一直在同一個對話裡做下去">為什麼不能一直在同一個對話裡做下去？</a></div>
+  <div class="toc-item"><span class="toc-num">02</span><a class="toc-title" href="#step1-把我的規矩從對話搬進-agentsmd">STEP 1 把「我的規矩」從對話搬進 AGENTS.md</a></div>
+  <div class="toc-item"><span class="toc-num">03</span><a class="toc-title" href="#step2-把我的做法寫成一個會動的技能">STEP 2 把「我的做法」寫成一個會動的技能</a></div>
+  <div class="toc-item"><span class="toc-num">04</span><a class="toc-title" href="#step3-到哪裡找現成技能裝在哪一層">STEP 3 到哪裡找現成技能？裝在哪一層？</a></div>
+  <div class="toc-item"><span class="toc-num">05</span><a class="toc-title" href="#step4-mcp與plugins把外部連線寫成設定不是點一點">STEP 4 MCP 與 Plugins：把外部連線寫成設定，不是點一點</a></div>
+  <div class="toc-item"><span class="toc-num">06</span><a class="toc-title" href="#step5-怎麼讓任何一個ai快速吃下整個專案">STEP 5 怎麼讓任何一個 AI 快速吃下整個專案？</a></div>
+  <div class="toc-item"><span class="toc-num">07</span><a class="toc-title" href="#step6-opencode換一個ai專案還在嗎">STEP 6 opencode：換一個 AI，專案還在嗎？</a></div>
+  <div class="toc-item"><span class="toc-num">08</span><a class="toc-title" href="#做完這六步你換回了什麼">做完這六步，你換回了什麼？</a></div>
+</section>
+
+<!-- ═════════════ Chapter 01 ═════════════ -->
+<section class="chapter" id="為什麼不能一直在同一個對話裡做下去">
+  <div class="chapter-num">01 · Habit · 壞習慣</div>
+  <h1>為什麼不能一直在同一個對話裡做下去？</h1>
+
+  <p class="lead">多數人用 AI 的方式是把所有東西丟進同一個對話視窗：規矩、做法、連線設定、專案脈絡全部混在一起。對話關了就全部消失，換一個工具就從頭來過。這不是工具的問題，是狀態放錯了地方。</p>
+
+  <p>程式開發有一個早已驗證的做法：專案的狀態活在資料夾與 git 裡，工具只是來讀取它。換編輯器、換 AI、換機器，資料夾不動，專案就在。把同一個做法搬到 AI 工作流，需要搬的東西只有五項：</p>
+
+  <ol>
+    <li><strong>AGENTS.md</strong> — 你對 AI 的規矩。</li>
+    <li><strong>Skills</strong> — 你的做法，寫成可觸發的技能檔。</li>
+    <li><strong>MCP / Plugins</strong> — 外部連線，寫成設定檔。</li>
+    <li><strong>repomix</strong> — 把整個專案打包成 AI 吃得下的格式。</li>
+    <li><strong>opencode 驗證</strong> — 換一個 AI 開啟同一個資料夾，逐項確認上面的東西都還在。</li>
+  </ol>
+
+  <p class="pull">工具會換，資料夾不會。</p>
+
+  <p>指南 12 已經裝好 Git 與 GitHub。那一篇把 git 當成「改壞了的救兵」；這一篇把 git 升級成「專案記憶的載體」。六步做完，你的 AI 專案不再活在某一輪對話裡，而是活在資料夾裡，誰 clone 下來都能接手。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">先診斷，再動手</div>
+    這一步把「診斷」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 02 ═════════════ -->
+<section class="chapter" id="step1-把我的規矩從對話搬進-agentsmd">
+  <div class="chapter-num">02 · Step 1 · 規矩</div>
+  <h1>STEP 1　把「我的規矩」從對話搬進 AGENTS.md</h1>
+
+  <p class="lead">你在每一輪對話開頭重複貼上的那段話，就是該寫成檔案的東西。把它存成 repo 根目錄的 <code>AGENTS.md</code>，之後每一個 AI 開啟這個資料夾，第一件事就是讀它。</p>
+
+  <p>不需要從零開始寫。先把你在對話裡反覆交代的那些规矩直接複製進來，再依下列結構整理：</p>
+
+  <h2 id="真實範例">真實範例</h2>
+
+  <p>這個 repo 自己的 <code>AGENTS.md</code> 開頭長這樣：</p>
+
+  <figure class="prompt">
+    <figcaption>AGENTS.md（節錄前幾行）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code># AGENTS.md
+## Editor-in-Chief
+**Purpose**: Reduce common editorial mistakes (by AI or human editors)
+and produce higher-quality publications.
+**Usage**: Merge with project-specific guidelines as needed.
+**Tradeoff**: These guidelines bias toward carefulness over speed.
+For trivial tasks, use your judgment.</code></pre>
+  </figure>
+
+  <p>三行就夠了：Purpose 講這份規矩在解決什麼問題，Usage 講什麼時候該用，Tradeoff 講它犧牲了什麼。AI 讀到 Tradeoff 就知道什麼時候可以放寬，不必每次問你。</p>
+
+  <h2 id="成功訊號">成功訊號</h2>
+
+  <p>開一輪<strong>全新的對話</strong>，什麼都不貼，只告訴它開啟這個資料夾。它應該自動讀到 <code>AGENTS.md</code> 並且照著做。如果需要你再講一遍，代表檔案還沒寫到位。</p>
+
+  <div class="callout">
+    <code>AGENTS.md</code> 是跨工具通用的檔案名稱，Codex、Claude Code、Cursor 都會自動讀取。不要用其他自訂名稱，那只有特定工具認得。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">規矩寫成檔案</div>
+    這一步把「我的規矩」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 03 ═════════════ -->
+<section class="chapter" id="step2-把我的做法寫成一個會動的技能">
+  <div class="chapter-num">03 · Step 2 · 做法</div>
+  <h1>STEP 2　把「我的做法」寫成一個會動的技能</h1>
+
+  <p class="lead">AGENTS.md 解決「規矩」，Skill 解決「做法」。規矩是每次都要遵守的，做法是特定任務才觸發的。一個 Skill 就是一個資料夾，裡面放一份 <code>SKILL.md</code>，描述做什麼、什麼時候觸發、怎麼做。</p>
+
+  <h2 id="先看一個最小的skill">先看一個最小的 Skill</h2>
+
+  <figure class="prompt">
+    <figcaption>一個會觸發自己的最小 SKILL.md（約 20 行）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>---
+name: weekly-digest
+description: 'Produce a weekly digest from git log.
+Triggers on "產出週報" "weekly digest" "這週做了什麼".'
+---
+
+# Weekly Digest
+
+## Step 1 · Gather
+Run `git log --oneline --since="7 days ago"` in the repo root.
+
+## Step 2 · Group
+Group commits by directory prefix.
+
+## Step 3 · Format
+Output as a Markdown list, one section per directory.
+Keep each entry under 12 words.</code></pre>
+  </figure>
+
+  <p>把這個資料夾放進 repo 的 <code>.claude/skills/</code> 或 <code>.agents/skills/</code>，<code>git add</code> 之後，任何一個 AI 打開這個 repo 都能呼叫它。</p>
+
+  <h2 id="三個階段">三個階段：Discovery → Activation → Execution</h2>
+
+  <p><strong>Discovery</strong>：AI 啟動時只讀 Skill 的 name 與 description，不讀內容。以這個 repo 裡實際安裝的 kami 技能為例，它佔了 110 個檔案、約 1.7 MB，但啟動時進入 context 的只有 name 加 description 那幾行字。這意味著裝一百個技能也不會拖慢啟動。</p>
+
+  <p><strong>Activation</strong>：AI 判斷你的請求符合 description 裡的觸發條件，載入完整 SKILL.md。</p>
+
+  <p><strong>Execution</strong>：AI 照著 SKILL.md 的步驟執行。</p>
+
+  <h2 id="description怎麼寫">description 怎麼寫</h2>
+
+  <p>回來看 kami 的 description，它塞了多種語言的觸發詞：</p>
+
+  <figure class="prompt">
+    <figcaption>kami 的 description（節錄）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>Triggers on "做 PDF / 排版 / 一页纸 / 白皮书 /
+作品集 / 简历 / PPT / slides / Marp /
+markdown slides / マークダウンのスライド /
+落地页 / 官网 / landing page / product page"</code></pre>
+  </figure>
+
+  <p>中文、簡體、日文、英文全部列進去。因為你不知道下一輪對話會用哪一種語言下指令。同一份 SKILL.md 在 Codex、Claude Code、Cursor 都能用，因為它們都支援 Agent Skills 格式（agentskills.io）。</p>
+
+  <div class="callout">
+    <strong>description 寫得不好，技能就永遠不會被觸發。</strong>這是新手最常踩的坑：Skill 寫完了，AI 從不呼叫它。原因幾乎都是 description 裡缺少你實際會用的觸發詞。把你自己會怎麼問寫進去，而不是描述它「能做什麼」。
+  </div>
+
+  <h2 id="成功訊號">成功訊號</h2>
+
+  <p><code>git add</code> 進 repo，在另一台機器 <code>git clone</code> 下來，用同一句觸發詞呼叫它，能正常觸發就算完成。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">做法變成技能</div>
+    這一步把「我的做法」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 04 ═════════════ -->
+<section class="chapter" id="step3-到哪裡找現成技能裝在哪一層">
+  <div class="chapter-num">04 · Step 3 · 別人的做法</div>
+  <h1>STEP 3　到哪裡找現成技能？裝在哪一層？</h1>
+
+  <p class="lead">不必每個技能都自己寫。skills.sh 目錄與 <code>npx skills</code> 指令讓你搜尋、安裝、管理別人寫好的技能。關鍵問題是：這個技能該跟著 repo 走，還是只留在你自己身上。</p>
+
+  <h2 id="npx-skills能做的事">npx skills 能做的事</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>指令</th><th>做什麼</th></tr></thead>
+      <tbody>
+        <tr><td><code>npx skills find &lt;關鍵字&gt;</code></td><td>在 skills.sh 搜尋符合的技能。</td></tr>
+        <tr><td><code>npx skills add &lt;來源&gt;</code></td><td>安裝指定技能到專案或全域。</td></tr>
+        <tr><td><code>npx skills list</code></td><td>列出目前已安裝的技能與實際路徑。</td></tr>
+        <tr><td><code>npx skills update</code></td><td>更新已安裝的技能。</td></tr>
+        <tr><td><code>npx skills remove &lt;名稱&gt;</code></td><td>移除指定技能。</td></tr>
+        <tr><td><code>npx skills init &lt;名稱&gt;</code></td><td>建立一個新的技能骨架。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="裝在哪一層">裝在哪一層</h2>
+
+  <p>判斷標準只有一個：<strong>這個技能該不該跟著 repo 走？</strong></p>
+
+  <ul>
+    <li><strong>Yes → 專案層級</strong>：預設安裝位置在 repo 內，<code>git add</code> 之後任何人都 clone 得到。適合這個專案專屬的做法。</li>
+    <li><strong>No → 全域</strong>：加 <code>-g</code> 安裝到 <code>~/.agents/skills/</code>，只有你自己用得到。適合你個人的習慣，跟專案無關。</li>
+  </ul>
+
+  <h2 id="symlink還是copy">symlink 還是 copy</h2>
+
+  <p><code>npx skills add</code> 預設用 symlink 連結到全域技能目錄，意思是全域更新一次，專案裡跟著更新。如果你想把技能凍結在當下版本，加 <code>--copy</code> 把檔案直接複製進 repo。</p>
+
+  <div class="callout">
+    不要背路徑。各工具的安裝位置不同，用 <code>npx skills list</code> 看實際落在哪裡。如果安裝到專案層級的 symlink 被 <code>git add</code> 進了 repo，記得在 <code>.gitignore</code> 排除——細節見指南 14 第六章的 <code>.gitignore</code> 規則。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">別人的經驗也是資產</div>
+    這一步把「別人的做法」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 05 ═════════════ -->
+<section class="chapter" id="step4-mcp與plugins把外部連線寫成設定不是點一點">
+  <div class="chapter-num">05 · Step 4 · 連線</div>
+  <h1>STEP 4　MCP 與 Plugins：把外部連線寫成設定，不是點一點</h1>
+
+  <p class="lead">Skills 管「怎麼做」，MCP 管「能存取與控制什麼」，Plugins 是把前面兩項打包分發的形式。把連線寫成設定檔，才能跟著 repo 走，不必每次換工具重新點一遍。</p>
+
+  <h2 id="codex端">Codex 端</h2>
+
+  <p>MCP server 設定寫在 <code>~/.codex/config.toml</code>，格式如下：</p>
+
+  <figure class="prompt">
+    <figcaption>config.toml 裡的 MCP server 設定</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>[mcp_servers.my-server]
+command = "npx"
+args = ["-y", "my-mcp-server"]
+env = { API_KEY = "sk-..." }</code></pre>
+  </figure>
+
+  <h2 id="chatgpt-桌面app端">ChatGPT 桌面 app 端</h2>
+
+  <p>路徑：Settings → MCP servers → Add server → 填入設定 → 重啟 app。Plugins 的路徑：Plugins 分頁 → + 安裝。<strong>Plugins 安裝後必須開一輪新對話才會生效。</strong></p>
+
+  <div class="callout">
+    <strong>IDE 擴充功能不支援 Plugins。</strong>Cursor、VS Code 等 IDE 內的 AI 擴充功能有自己的外掛格式，與 ChatGPT 桌面 app 的 Plugins 不相容。Skills 與 MCP 設定仍然通用，只有 Plugins 這一層受限於桌面 app。
+  </div>
+
+  <div class="callout">
+    <strong>「Sign in with ChatGPT」不等於授權資料存取。</strong>這個按鈕只讓你用 ChatGPT 帳號的身分登入第三方服務，分享的只有名稱、信箱與頭像，<strong>不包含</strong>你的對話紀錄或檔案存取權限。資料授權是另外一組設定，請各自確認。
+  </div>
+
+  <h2 id="secrets">Secrets</h2>
+
+  <p>API token 等敏感資訊用環境變數傳入，不要寫死在設定檔裡。慣例是把 token 放在 <code>.env</code> 檔，而 <code>.env</code> 永遠不 commit（見指南 14 第六章 <code>.gitignore</code> 規則）。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">連線寫進設定檔</div>
+    這一步把「外部連線」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 06 ═════════════ -->
+<section class="chapter" id="step5-怎麼讓任何一個ai快速吃下整個專案">
+  <div class="chapter-num">06 · Step 5 · 交接</div>
+  <h1>STEP 5　怎麼讓任何一個 AI 快速吃下整個專案？</h1>
+
+  <p class="lead">前面四步把狀態搬進了資料夾，但 AI 的 context window 有限，不可能一次讀完整個 repo。repomix 把整個專案打包成 AI 吃得下的單一檔案，用 Tree-sitter 抽取結構，壓縮率約 70%。輸出檔放進 <code>.gitignore</code>，不進 repo。</p>
+
+  <h2 id="repomix">repomix</h2>
+
+  <figure class="prompt">
+    <figcaption>安裝並執行 repomix</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>npm install -g repomix
+repomix</code></pre>
+  </figure>
+
+  <p>執行後會產出一個 <code>repomix-output.xml</code>（或 <code>.txt</code>），把 repo 裡的檔案結構與內容壓縮成一份。拿去貼給任何一個 AI，它就能讀到整個專案。</p>
+
+  <h2 id="配套工具">配套工具</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>工具</th><th>安裝</th><th>做什麼</th></tr></thead>
+      <tbody>
+        <tr><td>repomix</td><td><code>npm install -g repomix</code></td><td>把 repo 打包成 AI 友善格式，Tree-sitter 抽取，約 70% 壓縮。</td></tr>
+        <tr><td>rtk</td><td><code>brew install rtk</code></td><td>CLI 輸出壓縮代理，平均約 56%、最高 90% 壓縮率，Apache-2.0 授權。</td></tr>
+        <tr><td>ccusage</td><td>—</td><td>讀取 AI 工具的 session log，計算本次對話的成本。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>這一步是選擇性的。</strong>repomix 與 rtk 都不在主線流程裡，不安裝不會影響前面五步的結果。它們解決的是「專案太大、AI 吃不下」的問題，等你遇到時再裝就好。
+  </div>
+
+  <h2 id="成功訊號">成功訊號</h2>
+
+  <p>對同一個 repo 跑兩次 repomix，比較前後輸出。第二次刻意排除一些不重要的目錄（用 <code>--ignore</code>），輸出明顯變短，但你需要的資訊仍在裡面，就代表壓縮有效。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">交接檔一次打包</div>
+    這一步把「專案快照」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 07 ═════════════ -->
+<section class="chapter" id="step6-opencode換一個ai專案還在嗎">
+  <div class="chapter-num">07 · Step 6 · 驗證</div>
+  <h1>STEP 6　opencode：換一個 AI，專案還在嗎？</h1>
+
+  <p class="lead">前面五步把東西都搬進資料夾了。這一步是驗收：換一個完全不同的 AI agent，打開同一個資料夾，逐項確認前面的努力真的可攜。</p>
+
+  <h2 id="驗證清單">驗證清單</h2>
+
+  <ol>
+    <li><strong>AGENTS.md 會被讀到</strong>：開啟新對話，不貼任何東西，看 AI 是否自動遵循你的規矩。</li>
+    <li><strong>Chapter 03 的 Skill 可以被呼叫</strong>：用觸發詞呼叫它，確認能正常執行。</li>
+    <li><strong>MCP 連線可用</strong>：呼叫 MCP server 提供的工具，確認有回應。</li>
+  </ol>
+
+  <p>如果三項都通過，代表你的專案已經脫離對單一 AI 的依賴。</p>
+
+  <h2 id="為什麼是opencode">為什麼用 opencode 驗證</h2>
+
+  <p>opencode 是開源的、可換 provider 的 AI 終端工具，原生支援 Agent Skills 與 MCP。用它來驗證，等於用一個跟你原來完全不同的 AI 來開同一個資料夾，最能檢驗可攜性。</p>
+
+  <h2 id="安裝opencode-desktop">安裝 opencode 桌面版</h2>
+
+  <figure class="prompt">
+    <figcaption>安裝 opencode 桌面版</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install --cask opencode-desktop</code></pre>
+  </figure>
+
+  <p>第一次啟動會讓你選擇登入方式。設定檔放在 <code>~/.config/opencode/opencode.json</code>。</p>
+
+  <p>桌面版相比 CLI 版多了幾項好處：可以同時開多個 session 平行工作、內建編輯器直接看 diff、支援拖放檔案進對話。</p>
+
+  <div class="callout">
+    <strong>桌面版目前仍是 beta。</strong>介面與功能可能變動，遇到問題時可用 CLI 版 <code>npx opencode</code> 備援。
+  </div>
+
+  <h2 id="成功訊號">成功訊號</h2>
+
+  <p><strong>你沒有重新貼上任何東西，opencode 已經知道這個專案怎麼做。</strong>它讀得到 AGENTS.md、呼叫得到你裝的 Skill、連得上你設定的 MCP。這一步通過，前面五步才算真正完成。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">換一個 agent 照樣動</div>
+    這一步把「驗證」從對話搬進了資料夾。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 08 ═════════════ -->
+<section class="chapter" id="做完這六步你換回了什麼">
+  <div class="chapter-num">08 · Payoff · 誰都能接手</div>
+  <h1>做完這六步，你換回了什麼？</h1>
+
+  <p class="lead">一次 <code>git clone</code> 還原整個工作環境。換機器、換人、換 AI，全部接得上。這就是程式開發早就驗證過的可攜性，現在你的 AI 專案也有了。</p>
+
+  <h2 id="安全與版本">安全與版本</h2>
+
+  <p>Skills 是程式碼，應該被當作軟體對待。以這個 repo 裡實際安裝的 kami 為例：它的 <code>scripts/check-update.sh</code> 在每天第一次執行時連線 GitHub 檢查更新，而且 SKILL.md 裡主動寫明「不上傳使用者的檔案內容」 — 這就是可審查的樣子。</p>
+
+  <h2 id="安裝前該看的四件事">安裝前該看的四件事</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>檢查項</th><th>看什麼</th></tr></thead>
+      <tbody>
+        <tr><td>來源</td><td>作者是誰、GitHub stars、安裝量。偏好 1K 以上安裝的技能。</td></tr>
+        <tr><td>腳本內容</td><td>有沒有連到外部伺服器、上傳檔案的邏輯。</td></tr>
+        <tr><td>授權</td><td>是否與你的專案授權相容。</td></tr>
+        <tr><td>遙測</td><td><code>npx skills</code> 預設會傳送匿名使用資料，設 <code>DISABLE_TELEMETRY=1</code> 環境變數可關閉。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="vendor-還是-install">vendor 還是 install</h2>
+
+  <p>這個 repo 的 commit <code>741d213</code> 做了一件事：把 kami 技能 vendor 進來，同時把繁體中文字體預設改為 Iansui。vendor 的代價是不會自動更新；好處是版本凍結，不會因為上游改動而壞掉。</p>
+
+  <p>這個 repo 裡有一份 <code>skills-lock.json</code>，記錄了每個技能的來源與 hash，格式如下：</p>
+
+  <figure class="prompt">
+    <figcaption>skills-lock.json（本 repo 的實際內容）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>{
+  "version": 1,
+  "skills": {
+    "kami": {
+      "source": "tw93/kami",
+      "sourceType": "github",
+      "skillPath": "skills/kami/SKILL.md",
+      "computedHash": "9ae28dbabd6cdfa099482df8f9e50295a694b144cf443e5178b6c804cb1af8cd"
+    }
+  }
+}</code></pre>
+  </figure>
+
+  <p>有了這份檔，任何人 clone 這個 repo 之後都能確認技能版本一致。</p>
+
+  <h2 id="可攜性的三層">可攜性的三層</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>層級</th><th>內容</th><th>可攜程度</th></tr></thead>
+      <tbody>
+        <tr><td>一定讀得到</td><td>AGENTS.md、README、git 歷史、MCP 設定範本</td><td>純文字與標準格式，任何工具都吃。</td></tr>
+        <tr><td>可能需要調整</td><td>Skills 路徑、Plugins 路徑</td><td>格式通用，但安裝位置因工具而異。</td></tr>
+        <tr><td>可能不支援</td><td>工具專屬的 plugin 格式</td><td>只在那一個工具內有效，換工具就得重寫。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="驗收指令">驗收指令</h2>
+
+  <figure class="prompt">
+    <figcaption>在一次全新 clone 上逐項確認</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>git clone &lt;你的 repo 網址&gt;
+cd &lt;專案目錄&gt;
+cat AGENTS.md
+npx skills list
+cat ~/.codex/config.toml</code></pre>
+  </figure>
+
+  <p>三行都有輸出，代表規矩、技能、連線全部跟著 repo 走了。</p>
+
+  <h2 id="常見症狀排查">常見症狀排查</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>看到什麼</th><th>回到哪一步</th></tr></thead>
+      <tbody>
+        <tr><td>新 AI 不遵守你的規矩</td><td>STEP 1：確認 <code>AGENTS.md</code> 在 repo 根目錄，且格式正確。</td></tr>
+        <tr><td>技能裝了但不會觸發</td><td>STEP 2：檢查 description 裡的觸發詞是否包含你用的那句。</td></tr>
+        <tr><td><code>npx skills list</code> 看不到東西</td><td>STEP 3：確認安裝時沒有加 <code>-g</code>（專案層級）或裝錯了位置。</td></tr>
+        <tr><td>MCP 連不上</td><td>STEP 4：確認設定檔裡 server 名稱與指令正確，token 有效。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">clone 一次全部還原</div>
+    這一步把「誰都能接手」從對話搬進了資料夾。
+  </div>
+
+  <p class="note">本頁的版本號與工具查核日為 2026-09-21。各工具的官方文件為最終依據。</p>
+</section>
+
+
+<script>
+  /* 手機版表格：把表頭寫進每個儲存格的 data-label，配合 CSS 改為堆疊顯示 */
+  document.querySelectorAll('.table-wrap table').forEach(function (table) {
+    var heads = Array.prototype.map.call(table.querySelectorAll('thead th'), function (th) {
+      return th.textContent.trim();
+    });
+    if (!heads.length) return;
+    Array.prototype.forEach.call(table.querySelectorAll('tbody tr'), function (tr) {
+      Array.prototype.forEach.call(tr.children, function (cell, i) {
+        if (heads[i]) cell.setAttribute('data-label', heads[i]);
+      });
+    });
+  });
+
+  document.querySelectorAll('.copy-button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('code');
+      if (!code || !navigator.clipboard) return;
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        var original = btn.textContent;
+        btn.textContent = '已複製';
+        setTimeout(function () { btn.textContent = original; }, 1600);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

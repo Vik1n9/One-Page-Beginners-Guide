@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<!-- ==================================================================
+     LOCAL LLM · parchment design system · zh-TW
+     Mac 本地模型怎麼跑？記憶體對照表、LM Studio、Ollama 到接進 opencode
+     ================================================================== -->
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>Mac 本地模型怎麼跑？記憶體對照表、LM Studio、Ollama 到接進 opencode</title>
+<meta name="description" content="Mac 本地跑 LLM 完整教學：先查統一記憶體對照表確認跑得動多大的模型，再用 LM Studio 讓本機說出第一句話，接著裝 Ollama 建立常駐 API，最後把 opencode 的引擎從雲端換成本機。每一步都附上驗證指令與排查表。">
+<meta name="keywords" content="Mac 本地模型, LM Studio, Ollama, opencode, 記憶體對照表, Qwen3-Coder, GGUF, MLX, 統一記憶體, 本地 LLM, Apple 晶片, openai-compatible">
+<meta name="generator" content="Kami">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="alternate icon" href="favicon.ico">
+<style>
+  /* Regular weight */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W04.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Bold weight - W05 for all bold variants */
+  @font-face {
+    font-family: "TsangerJinKai02";
+    src: url("https://cdn.jsdelivr.net/gh/tw93/Kami@main/assets/fonts/TsangerJinKai02-W05.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm 22mm 22mm 22mm;
+    background: #f5f4ed;
+
+    @top-right {
+      content: string(section-title);
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 8pt;
+      color: #6b6a64;
+    }
+
+    @bottom-center {
+      content: counter(page) "  ·  Mac 本地模型";
+      font-family: "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                   "Noto Serif CJK SC", "Songti TC", "Songti SC", Georgia, serif;
+      font-size: 9pt;
+      color: #6b6a64;
+    }
+  }
+
+  @page:first {
+    @top-right { content: ""; }
+    @bottom-center { content: ""; }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --parchment: #f5f4ed;
+    --ivory:     #faf9f5;
+    --inline-code-bg: #f0eee6;
+    --near-black:#141413;
+    --dark-warm: #3d3d3a;
+    --olive:     #504e49;
+    --stone:     #6b6a64;
+    --brand:     #1B365D;
+    --border:    #e8e6dc;
+    --border-soft:#e5e3d8;
+    --tag-bg:    #E4ECF5;
+    --serif: "Iansui", "TsangerJinKai02", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC", "Noto Serif SC", "Songti TC", "Songti SC", "STSong", Georgia, serif;
+    --sans: var(--serif);
+
+    --rhythm-module:  14pt;
+    --rhythm-section: 18pt;
+  }
+
+  html, body { background: var(--parchment); }
+
+  @media screen {
+    body { max-width: 210mm; margin: 0 auto; padding: 20mm 22mm 22mm 22mm; }
+  }
+
+  body {
+    color: var(--near-black);
+    font-family: var(--serif);
+    font-size: 10.5pt;
+    line-height: 1.55;
+    letter-spacing: 0.3pt;
+    widows: 3;
+    orphans: 3;
+  }
+
+  .sans {
+    font-family: var(--sans);
+  }
+
+  /* ========== COVER ========== */
+  .cover {
+    min-height: 240mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 40mm 0 0 0;
+    break-after: page;
+  }
+  .cover-eyebrow {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1.5pt;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 18pt;
+  }
+  .cover-title {
+    font-size: 36pt;
+    font-weight: 500;
+    color: var(--near-black);
+    line-height: 1.15;
+    letter-spacing: 0.3pt;
+    margin-bottom: 16pt;
+  }
+  .cover-sub {
+    font-family: var(--sans);
+    font-size: 14pt;
+    color: var(--olive);
+    line-height: 1.5;
+    max-width: 85%;
+    margin-bottom: 30pt;
+  }
+  .cover-meta {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--stone);
+    line-height: 1.5;
+  }
+  .cover-meta strong {
+    color: var(--dark-warm);
+    font-weight: 500;
+  }
+
+  /* ========== TOC ========== */
+  .toc { break-after: page; }
+  .toc h2 {
+    font-size: 22pt;
+    font-weight: 500;
+    margin-bottom: var(--rhythm-module);
+  }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6pt 0;
+    border-bottom: 0.3pt dotted var(--border);
+    font-size: 11pt;
+  }
+  .toc-item:last-of-type { border-bottom: none; }
+  .toc-num {
+    color: var(--brand);
+    font-weight: 500;
+    min-width: 30pt;
+  }
+  .toc-title {
+    flex: 1;
+    color: var(--near-black);
+    padding-left: 6pt;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 12pt;
+  }
+  .toc-title[href]::after {
+    content: target-counter(attr(href), page);
+    color: var(--stone);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  /* ========== HEADINGS ========== */
+  h1 {
+    font-size: 22pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0 0 10pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+    string-set: section-title content();
+  }
+
+  h2 {
+    font-size: 16pt;
+    font-weight: 500;
+    line-height: 1.25;
+    margin: 24pt 0 8pt 0;
+    color: var(--near-black);
+    break-after: avoid;
+  }
+
+  h3 {
+    font-size: 13pt;
+    font-weight: 500;
+    line-height: 1.3;
+    margin: 18pt 0 6pt 0;
+    color: var(--dark-warm);
+    break-after: avoid;
+  }
+
+  h4 {
+    font-size: 11pt;
+    font-weight: 500;
+    line-height: 1.35;
+    margin: 14pt 0 5pt 0;
+    color: var(--olive);
+    break-after: avoid;
+  }
+
+  .chapter-num {
+    font-family: var(--sans);
+    font-size: 10pt;
+    color: var(--brand);
+    letter-spacing: 1pt;
+    text-transform: uppercase;
+    margin-bottom: 6pt;
+  }
+
+  /* ========== PARAGRAPHS ========== */
+  p {
+    margin: 0 0 10pt 0;
+    line-height: 1.55;
+    color: var(--near-black);
+    widows: 2;
+    orphans: 2;
+  }
+
+  .lead {
+    font-size: 12pt;
+    line-height: 1.55;
+    color: var(--dark-warm);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  .hl { color: var(--brand); font-weight: 500; }
+  strong { font-weight: 500; }
+
+  .note {
+    font-size: 9pt;
+    color: var(--stone);
+    margin-bottom: var(--rhythm-module);
+  }
+
+  a { color: var(--brand); }
+
+  /* ========== LISTS ========== */
+  ul, ol {
+    margin: 6pt 0 10pt 0;
+    padding-left: 20pt;
+    line-height: 1.55;
+  }
+  ul li::marker { color: var(--brand); }
+  ol li::marker { color: var(--brand); font-weight: 500; }
+
+  /* ========== CODE / PROMPT ========== */
+  code {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    background: var(--inline-code-bg);
+    padding: 1pt 4pt;
+    border-radius: 2pt;
+    color: var(--dark-warm);
+  }
+  pre {
+    font-family: "JetBrains Mono", "SF Mono", Consolas,
+                 "Iansui", "TsangerJinKai02", "Source Han Serif SC",
+                 "Noto Serif CJK SC", "Songti SC", monospace;
+    font-size: 9pt;
+    line-height: 1.5;
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    color: var(--near-black);
+    break-inside: avoid;
+  }
+  pre code { background: transparent; padding: 0; font-size: inherit; }
+
+  .prompt {
+    position: relative;
+    margin: 12pt 0;
+    break-inside: avoid;
+  }
+  .prompt figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: left;
+    margin: 0 0 4pt 0;
+    padding-right: 52pt;
+  }
+  .copy-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-family: var(--sans);
+    font-size: 8.5pt;
+    color: var(--brand);
+    background: var(--ivory);
+    border: 0.5pt solid var(--border);
+    border-radius: 3pt;
+    padding: 2pt 8pt;
+    cursor: pointer;
+  }
+  .copy-button:hover { background: var(--tag-bg); }
+  @media print { .copy-button { display: none; } }
+
+  /* ========== TABLE ========== */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 12pt 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    break-inside: avoid;
+  }
+  table th {
+    text-align: left;
+    font-weight: 500;
+    color: var(--dark-warm);
+    padding: 6pt 8pt;
+    border-bottom: 0.6pt solid var(--border);
+    background: transparent;
+  }
+  table td {
+    padding: 5pt 8pt;
+    border-bottom: 0.25pt solid var(--border);
+    vertical-align: top;
+  }
+
+  /* ========== CALLOUT ========== */
+  .callout {
+    background: var(--ivory);
+    padding: 10pt 14pt;
+    border-radius: 3pt;
+    margin: 12pt 0;
+    line-height: 1.55;
+    break-inside: avoid;
+  }
+
+  .takeaway {
+    background: var(--ivory);
+    border-radius: 4pt;
+    padding: 10pt 14pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .takeaway-label {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--brand);
+    letter-spacing: 0.5pt;
+    text-transform: uppercase;
+    margin-bottom: 4pt;
+  }
+
+  /* ========== TAG ========== */
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--brand);
+    font-family: var(--sans);
+    font-size: 9pt;
+    font-weight: 500;
+    padding: 1pt 6pt;
+    border-radius: 3pt;
+    margin-right: 4pt;
+  }
+
+  /* ========== EXECUTIVE SUMMARY ========== */
+  .exec-summary {
+    background: var(--ivory);
+    border-radius: 6pt;
+    padding: 16pt 20pt;
+    margin: 14pt 0;
+    break-inside: avoid;
+  }
+  .exec-summary h2 {
+    margin-top: 0;
+    font-size: 13pt;
+  }
+
+  /* ========== FAQ / DETAILS ========== */
+  details {
+    border-bottom: 0.25pt solid var(--border);
+    padding: 7pt 0;
+    break-inside: avoid;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark-warm);
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before {
+    content: "＋";
+    color: var(--brand);
+    margin-right: 6pt;
+  }
+  details[open] summary::before { content: "－"; }
+  details > div { margin-top: 6pt; }
+  @media print { details > div { display: block !important; } }
+
+  /* ========== FIGURE / QUOTE / PULL ========== */
+  figure { margin: 14pt 0; break-inside: avoid; }
+  figure > figcaption {
+    font-family: var(--sans);
+    font-size: 9pt;
+    color: var(--stone);
+    text-align: center;
+    margin-top: 6pt;
+    line-height: 1.45;
+  }
+  .prompt > figcaption { text-align: left; margin-top: 0; }
+  blockquote {
+    margin: 14pt 0;
+    padding: 0 18pt;
+    font-size: 12.5pt;
+    line-height: 1.5;
+    color: var(--olive);
+    break-inside: avoid;
+  }
+  blockquote .cite {
+    display: block;
+    font-size: 9pt;
+    color: var(--stone);
+    margin-top: 5pt;
+  }
+  .pull {
+    font-size: 15pt;
+    line-height: 1.4;
+    color: var(--brand);
+    margin: 18pt 0;
+  }
+  .diagram-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .diagram { width: 100%; height: auto; display: block; }
+  @media print { .diagram { min-width: 0; } }
+
+  /* ========== CHAPTER BREAK ========== */
+  .chapter { break-before: page; }
+
+  /* ========== 手機（Kami 版面預設模擬 A4，需另補窄螢幕規則） ========== */
+  @media screen and (max-width: 640px) {
+    body { padding: 16px 18px 32px; font-size: 11pt; }
+    .cover { min-height: auto; padding-top: 14mm; }
+    .cover-title { font-size: 26pt; }
+    .cover-sub { font-size: 12pt; max-width: 100%; }
+    .cover-eyebrow { margin-bottom: 12pt; }
+    h1 { font-size: 19pt; }
+    h2 { font-size: 14pt; }
+    .lead { font-size: 11.5pt; }
+    /* 表格改為堆疊式：每列自成一組，欄名由 data-label 帶出，手機不需橫拖 */
+    .table-wrap { overflow-x: visible; }
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td { display: block; width: 100%; }
+    .table-wrap thead { display: none; }
+    .table-wrap tr {
+      padding: 8pt 0;
+      border-bottom: 0.6pt solid var(--border);
+    }
+    .table-wrap tbody tr:last-child { border-bottom: none; }
+    .table-wrap td {
+      border: 0;
+      padding: 2pt 0;
+    }
+    .table-wrap td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-family: var(--sans);
+      font-size: 8.5pt;
+      color: var(--stone);
+      letter-spacing: 0.2pt;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═════════════ COVER ═════════════ -->
+<section class="cover">
+  <div>
+    <div class="cover-eyebrow">Local LLM · Mac 本地模型</div>
+    <div class="cover-title">把網路拔掉，<br>你的專案還跑得動嗎？</div>
+    <div class="cover-sub">從記憶體對照表開始，確認你的 Mac 跑得動多大的模型，再裝好 LM Studio 與 Ollama，最後把 opencode 的引擎從雲端換成本機。每一步都先驗證跑得動，才教你怎麼接。</div>
+  </div>
+  <div class="cover-meta">
+    <strong>六個步驟 · 每步都寫為什麼</strong><br>
+    指南 14 · One-Page Beginners Guide
+  </div>
+</section>
+
+<!-- ═════════════ TOC ═════════════ -->
+<section class="toc">
+  <h2>目錄</h2>
+  <div class="toc-item"><span class="toc-num">01</span><a class="toc-title" href="#為什麼要在自己的電腦上跑模型什麼時候不該">為什麼要在自己的電腦上跑模型？什麼時候不該？</a></div>
+  <div class="toc-item"><span class="toc-num">02</span><a class="toc-title" href="#我的mac跑得動多大的模型">我的 Mac 跑得動多大的模型？</a></div>
+  <div class="toc-item"><span class="toc-num">03</span><a class="toc-title" href="#step1-lm-studio最快讓本機說出第一句話">STEP 1 LM Studio：最快讓本機說出第一句話</a></div>
+  <div class="toc-item"><span class="toc-num">04</span><a class="toc-title" href="#step2-已經有lm-studio了為什麼還要裝ollama">STEP 2 已經有 LM Studio 了，為什麼還要裝 Ollama？</a></div>
+  <div class="toc-item"><span class="toc-num">05</span><a class="toc-title" href="#step3-同一個專案資料夾只把引擎換成本機">STEP 3 同一個專案資料夾，只把引擎換成本機</a></div>
+  <div class="toc-item"><span class="toc-num">06</span><a class="toc-title" href="#跑起來之後mac會發生什麼事">跑起來之後，Mac 會發生什麼事？</a></div>
+</section>
+
+<!-- ═════════════ Chapter 01 ═════════════ -->
+<section class="chapter" id="為什麼要在自己的電腦上跑模型什麼時候不該">
+  <div class="chapter-num">01 · Why · 換掉供應商</div>
+  <h1>為什麼要在自己的電腦上跑模型？什麼時候不該？</h1>
+
+  <p class="lead">前面十三篇把規則、方法、環境都放進了資料夾。下一個自然的問題是：那個幫你思考的模型，能不能也換成本機的？答案是能，但要先搞清楚代價。</p>
+
+  <p>跑本地模型有三個真實的好處，也有三個真實的代價。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th></th><th>好處</th><th>代價</th></tr></thead>
+      <tbody>
+        <tr><td>一</td><td>斷網也能用。飛機上、捷運上、基地台掛了，照樣能問問題。</td><td>速度慢。同樣一句回答，本地比雲端慢五到二十倍。</td></tr>
+        <tr><td>二</td><td>資料不出這台電腦。專案內碼、客戶資料、私人筆記，都不會經過任何伺服器。</td><td>能力較弱。本地跑得動的模型，推理與寫 code 的能力比不上同代的雲端模型。</td></tr>
+        <tr><td>三</td><td>沒有計費。跑多少都不用付錢，不用担心 token 用完。</td><td>吃記憶體。模型越大越需要統一記憶體，8GB 的 Mac 幾乎什麼都跑不了。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="pull">本地模型是備份與隱私選項，不是雲端的替代品。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>維度</th><th>雲端模型</th><th>本地模型</th></tr></thead>
+      <tbody>
+        <tr><td>速度</td><td>秒回</td><td>慢，等得起才用</td></tr>
+        <tr><td>品質</td><td>同代最強</td><td>落後一到兩代</td></tr>
+        <tr><td>隱私</td><td>資料經過伺服器</td><td>資料不出本機</td></tr>
+        <tr><td>費用</td><td>依用量計費</td><td>免費，但吃硬體</td></tr>
+        <tr><td>可用性</td><td>需要網路</td><td>斷網也能用</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">先搞清楚用途</div>
+    本地模型解決的是「斷網」與「資料不外流」兩個問題，不解決「模型不夠聰明」的問題。如果你的主要需求是寫 code 的品質，留在雲端。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 02 ═════════════ -->
+<section class="chapter" id="我的mac跑得動多大的模型">
+  <div class="chapter-num">02 · Limit · 記憶體對照表</div>
+  <h1>我的 Mac 跑得動多大的模型？</h1>
+
+  <p class="lead">第一件事不是裝軟體，而是打開「關於這台 Mac」看你的統一記憶體是多少。模型能不能跑，取決於記憶體，不是硬碟空間。</p>
+
+  <p>硬碟是停車場：模型檔放得下，不代表跑得動。記憶體（統一記憶體中能分配給 GPU 的那一部分）才是車道：整個模型的權重必須全部載進記憶體才能執行，不夠大就開不了，或慢到無法使用。選模型看下面這張表，不要看硬碟剩餘空間。</p>
+
+  <p>量化（Q4）是把每個模型權重值從 16 位元浮點數壓縮到 4 位元整數，讓同一個模型佔用更少的記憶體，代價是品質稍微下降。這是本地跑模型的基本前提，下面的對照表全部以 Q4 為基準。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>統一記憶體</th><th>可跑參數（Q4）</th><th>體驗</th><th>能寫 code 嗎？</th></tr></thead>
+      <tbody>
+        <tr><td>8 GB</td><td>~3B</td><td>基本對話，偶爾詞不達意</td><td>不行。太小，無法理解程式結構</td></tr>
+        <tr><td>16 GB</td><td>~7-8B</td><td>可用，回覆偶有卡頓</td><td>基本補全可以。簡單的函式重寫與變數命名</td></tr>
+        <tr><td>24 GB</td><td>~14B</td><td>順暢，回應品質明顯提升</td><td>簡單重寫可以。短函式與樣板程式碼</td></tr>
+        <tr><td>32 GB</td><td>~30B（Qwen3-Coder 30B，MoE：30B 總參數但每次只啟動 3.3B）</td><td>舒適，接近日常可用</td><td>中小任務可以。多檔案重構、專案問答</td></tr>
+        <tr><td>64 GB</td><td>~70B</td><td>接近雲端 4o 水準</td><td>可以。長鏈推理、大型重構都撐得住</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>macOS 會限制 GPU 能使用的統一記憶體比例。</strong>統一記憶體 ≤ 36GB 的機種，GPU 最多只能用約 66%；超過 36GB 的機種，比例提高到約 75%。這是新手最常誤判的地方：以為 32GB 的 Mac 能跑 32GB 的模型，實際上 GPU 只能分到約 21GB。上面那張表已經把這個限制算進去了。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">記憶體決定上限</div>
+    打開「關於這台 Mac」，記下你的統一記憶體數字，對照上面的表。這就是你在後續步驟能選的模型上限。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 03 ═════════════ -->
+<section class="chapter" id="step1-lm-studio最快讓本機說出第一句話">
+  <div class="chapter-num">03 · Step 1 · 先聽到聲音</div>
+  <h1>STEP 1　LM Studio：最快讓本機說出第一句話</h1>
+
+  <p class="lead">先裝圖形介面，因為你能直接看到記憶體使用量、能比較 GGUF 與 MLX 兩種格式、不用背任何指令。等確認模型在你的 Mac 上跑得動，再用下一章的 Ollama 把同樣的模型交給程式使用。</p>
+
+  <figure class="prompt">
+    <figcaption>安裝 LM Studio</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install --cask lm-studio</code></pre>
+  </figure>
+
+  <p>選三種情境，每種只推薦一個模型。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>情境</th><th>推薦模型</th><th>模型大小</th><th>最低記憶體</th></tr></thead>
+      <tbody>
+        <tr><td>只想先聽到第一句話</td><td>Qwen2.5-3B-Instruct</td><td>~2 GB</td><td>8 GB</td></tr>
+        <tr><td>想有一個能對話的助手</td><td>Llama 3.1 8B Instruct</td><td>~5 GB</td><td>16 GB</td></tr>
+        <tr><td>想要能幫忙寫 code</td><td>Qwen3-Coder 30B</td><td>~19 GB</td><td>32 GB</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>下載模型時注意看日期，LM Studio 搜尋結果裡會顯示上傳時間，優先選三個月內更新的版本。過舊的模型檔可能不相容目前的 LM Studio 版本。</p>
+
+  <h2 id="mlx-與-gguf-的差別">MLX 與 GGUF 的差別</h2>
+
+  <p>LM Studio 提供兩種格式：<strong>GGUF</strong> 是跨平台通用格式，<strong>MLX</strong> 是 Apple 晶片專用引擎，在 Mac 上比 GGUF 更快。如果你的 Mac 是 Apple 晶片（M 系列），優先選 MLX 格式。</p>
+
+  <div class="callout">
+    <strong>MLX 格式有版本要求。</strong>MLX 只支援 macOS 14 以上、Apple 晶片（M 系列）。Intel Mac 不支援 MLX，只能用 GGUF。確認方式：Apple 選單 →「關於這台 Mac」，看 macOS 版本與晶片欄位。
+  </div>
+
+  <h2 id="驗證">驗證</h2>
+
+  <ol>
+    <li>打開 LM Studio，在搜尋欄輸入上面推薦的模型名稱。</li>
+    <li>選一個 Q4 量化的版本，點下載。</li>
+    <li>下載完成後，切到左側的聊天頁面，選剛下載的模型。</li>
+    <li>打一句話，等它回應。</li>
+    <li><strong>關掉 Wi-Fi，再打一句話。它還能回應，就代表成功了。</strong></li>
+  </ol>
+
+  <div class="takeaway">
+    <div class="takeaway-label">關 Wi-Fi 還能回答</div>
+    斷網後仍然能回應，代表模型真的在你的 Mac 上執行，不是偷偷連到遠端伺服器。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 04 ═════════════ -->
+<section class="chapter" id="step2-已經有lm-studio了為什麼還要裝ollama">
+  <div class="chapter-num">04 · Step 2 · 給程式用的</div>
+  <h1>STEP 2　已經有 LM Studio 了，為什麼還要裝 Ollama？</h1>
+
+  <p class="lead">LM Studio 是給人類用的：打開圖形介面、選模型、聊天。Ollama 是給程式用的：它在背景提供一個常駐的 API，任何能發 HTTP 請求的程式都能呼叫它。opencode 就是透過這個 API 跟本地模型對話。</p>
+
+  <figure class="prompt">
+    <figcaption>安裝 Ollama</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>brew install ollama</code></pre>
+  </figure>
+
+  <h2 id="四個指令就夠">四個指令就夠</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>指令</th><th>做什麼</th></tr></thead>
+      <tbody>
+        <tr><td><code>ollama pull qwen3-coder:30b</code></td><td>從官方倉庫下載模型到本機。</td></tr>
+        <tr><td><code>ollama run qwen3-coder:30b</code></td><td>在終端機裡直接跟這個模型對話。</td></tr>
+        <tr><td><code>ollama list</code></td><td>列出本機已經下載的所有模型。</td></tr>
+        <tr><td><code>ollama ps</code></td><td>看目前正在記憶體裡載入的模型。</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="驗證-api-是否在線">驗證 API 是否在線</h2>
+
+  <figure class="prompt">
+    <figcaption>確認 Ollama API 正常運作</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>curl http://localhost:11434/api/tags</code></pre>
+  </figure>
+
+  <p>有輸出 JSON 就代表 Ollama 的背景 API 正在運作。如果看到 <code>connection refused</code>，代表 Ollama 沒有啟動，到「應用程式」資料夾點開它即可。</p>
+
+  <div class="callout">
+    <strong>不想裝兩個？</strong>LM Studio 也提供 OpenAI 相容的 API，預設在 <code>http://127.0.0.1:1234/v1</code>。下一章的設定步驟兩條路都能走，到時候再選就好。
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">程式能連才算數</div>
+    <code>curl</code> 有輸出 JSON，就代表你的 Mac 現在有一台本地的模型伺服器，任何程式都能連。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 05 ═════════════ -->
+<section class="chapter" id="step3-同一個專案資料夾只把引擎換成本機">
+  <div class="chapter-num">05 · Step 3 · 只換引擎</div>
+  <h1>STEP 3　同一個專案資料夾，只把引擎換成本機</h1>
+
+  <p class="lead">前面兩步把模型準備好了。這一步只做一件事：把 opencode 的模型引擎從雲端換成本機。專案資料夾、AGENTS.md、規則檔全部不動，只換背後思考的那顆引擎。</p>
+
+  <p>兩條路，選一條走。</p>
+
+  <h2 id="路線一-cli-一鍵啟動">路線一 CLI 一鍵啟動</h2>
+
+  <p>Ollama 提供 <code>ollama launch</code> 指令，可以直接啟動 opencode 並指向本機模型。它採用內联設定，不會覆蓋你現有的設定檔。</p>
+
+  <figure class="prompt">
+    <figcaption>用 Ollama 啟動 opencode</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>ollama launch opencode</code></pre>
+  </figure>
+
+  <p>如果只想產生設定檔而不啟動，加 <code>--config</code> 參數。</p>
+
+  <h2 id="路線二-手動設定檔">路線二手動設定檔</h2>
+
+  <p>如果你用的是 opencode 桌面版，或是想更清楚控制設定，可以手動編輯 <code>opencode.json</code>。下面是 v2 格式的設定，放在專案根目錄。</p>
+
+  <h3 id="ollama-設定">Ollama 設定</h3>
+
+  <figure class="prompt">
+    <figcaption>專案根目錄的 opencode.json（Ollama）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "ollama-local": {
+      "name": "Ollama (local)",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3-coder:30b": {
+          "name": "Qwen3-Coder 30B",
+          "limit": { "context": 64000, "output": 16384 }
+        }
+      }
+    }
+  }
+}</code></pre>
+  </figure>
+
+  <h3 id="lm-studio-設定">LM Studio 設定</h3>
+
+  <figure class="prompt">
+    <figcaption>專案根目錄的 opencode.json（LM Studio）</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "lm-studio-local": {
+      "name": "LM Studio (local)",
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "http://127.0.0.1:1234/v1"
+      },
+      "models": {
+        "your-model-name": {
+          "name": "Your Model Display Name",
+          "limit": { "context": 64000, "output": 16384 }
+        }
+      }
+    }
+  }
+}</code></pre>
+  </figure>
+
+  <div class="callout">
+    <strong>context 下限是 64k。</strong>Ollama 官方建議 <code>limit.context</code> 至少設 64000。低於這個值，opencode 的 agent 模式會因為上下文空間不足而崩潰。<code>your-model-name</code> 要替換成你實際在 LM Studio 裡載入的模型名稱。
+  </div>
+
+  <div class="callout">
+    <strong>v1 格式仍然可用。</strong>上面寫的是 v2 的 <code>providers</code>（複數）格式，是目前推薦的寫法。如果你的設定檔裡使用的是 v1 的 <code>provider</code>（單數）格式搭配 <code>npm</code> 欄位，那也可以正常運作，不必急著改。
+  </div>
+
+  <h2 id="期待管理">期待管理</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>適合本地模型</th><th>不適合本地模型</th></tr></thead>
+      <tbody>
+        <tr><td>小型編碼任務、函式重寫</td><td>大型重構（跨十個以上檔案）</td></tr>
+        <tr><td>專案內問答（搭配 AGENTS.md）</td><td>長鏈推理（多步驟分析）</td></tr>
+        <tr><td>離線環境下的備援</td><td>需要最高品質輸出的場景</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>其他工具，一句話帶過。</strong>RAG（檢索增強生成）能讓本地模型讀取你的整個程式碼庫，但設定較複雜，不在本頁範圍。語音輸入、llama.cpp 手動編譯、Atomic Chat 都是獨立主題，各有自己的教學。<code>codex --oss</code> 需要設定 <code>wire_api = "responses"</code>，設錯了會靜默失敗，建議先用上面的 <code>ollama launch</code> 路線確認能跑再嘗試。
+  </div>
+
+  <h2 id="排查表">排查表</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>症狀</th><th>原因</th><th>怎麼修</th></tr></thead>
+      <tbody>
+        <tr><td>回覆極慢</td><td>模型太大，超出記憶體</td><td>換小一級的模型，或用 <code>ollama ps</code> 確認沒有多個模型同時載入</td></tr>
+        <tr><td>連不上</td><td>服務沒啟動</td><td>Ollama：到「應用程式」打開它。LM Studio：確認 Developer 頁面的伺服器已開啟</td></tr>
+        <tr><td>agent 中途崩潰</td><td>context 設太小</td><td>確認 <code>limit.context</code> ≥ 64000</td></tr>
+        <tr><td>工具呼叫失敗</td><td>模型的 <code>num_ctx</code> 不夠</td><td>Ollama 官方建議從 16k-32k 起跳，逐步增加</td></tr>
+        <tr><td>找不到模型</td><td>還沒 pull</td><td><code>ollama pull 模型名稱</code> 或確認 LM Studio 已下載</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="驗證">驗證</h2>
+
+  <p><strong>拔掉網路線，打開同一個專案資料夾，AGENTS.md 跟前面章節設定的 skill 仍然正常運作。</strong>這代表引擎已經成功從雲端換成本機，而專案的所有規則都沒有被動到。</p>
+
+  <div class="takeaway">
+    <div class="takeaway-label">拔網後照樣生效</div>
+    同一個專案、同一套規則，只是背後思考的模型換了。隨時可以切回雲端，設定檔裡改一個 endpoint 就好。
+  </div>
+</section>
+
+<!-- ═════════════ Chapter 06 ═════════════ -->
+<section class="chapter" id="跑起來之後mac會發生什麼事">
+  <div class="chapter-num">06 · Payoff · 留著還是關掉</div>
+  <h1>跑起來之後，Mac 會發生什麼事？</h1>
+
+  <p class="lead">本地模型在跑的時候，你的 Mac 會變熱、風扇會轉、耗電量會增加、記憶體壓力會上升。這些都是正常的，但你需要知道怎麼判斷「什麼時候該關掉它」。</p>
+
+  <h2 id="該看到什麼">該看到什麼</h2>
+
+  <p>打開「活動監視器」→「記憶體」分頁，看下方的<strong>記憶體壓力</strong>圖表。綠色代表充裕，黃色代表開始吃緊，紅色代表記憶體不足、系統正在用硬碟交換。本地模型跑起來時，記憶體壓力上升是預期的，但如果持續停在紅色，就該關掉模型或換小一級的。</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>狀況</th><th>該怎麼辦</th></tr></thead>
+      <tbody>
+        <tr><td>風扇持續高速運轉</td><td>模型太大，換小一級。或讓 Mac 散熱（不要放在棉被上）</td></tr>
+        <tr><td>記憶體壓力長期在紅色</td><td>關掉其他吃記憶體的 app，或關掉模型</td></tr>
+        <tr><td>電池消耗異常快</td><td>插上電源。本地推理很耗電，不建議用電池跑</td></tr>
+        <tr><td>不需要用了</td><td>關掉 Ollama 或 LM Studio，釋放記憶體給其他 app</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="什麼時候該回到雲端">什麼時候該回到雲端</h2>
+
+  <p>當你發現本地模型的回覆品質明顯不夠用、需要長鏈推理、或是趕時間不想等，就把 opencode 的設定檔裡 endpoint 改回雲端。設定檔裡換一行就好，不需要重新安裝任何東西。</p>
+
+  <div class="callout">
+    <strong>本地模型不是隱私的萬靈丹。</strong>模型本身確實不會把資料傳出去，但你在指南 13 安裝的 plugin 與 MCP server 仍然會連線到網路。隱私的邊界不只在模型，也在所有你授權出去的工具。
+  </div>
+
+  <h2 id="gitignore-安全檢查表">.gitignore 安全檢查表</h2>
+
+  <p>本地跑模型會產生大檔與設定檔，其中有些絕對不能提交到 Git。把下面這些加進專案的 <code>.gitignore</code>。</p>
+
+  <figure class="prompt">
+    <figcaption>加進 .gitignore</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code># Model weight files (large, usually GBs)
+*.gguf
+*.safetensors
+*.bin
+models/
+
+# Environment variables and credentials
+.env
+.env.*
+*.key
+
+# Local settings (different per machine)
+# (don't add project opencode.json - that SHOULD be committed)
+
+# repomix output
+repomix-output.*
+*-output.md
+
+# Logs and temp files
+*.log
+*.tmp</code></pre>
+  </figure>
+
+  <p>口訣：<strong>先建 .gitignore，再 commit。不確定的檔案，先不要 commit。</strong></p>
+
+  <h3 id="驗證-gitignore">驗證 .gitignore 是否生效</h3>
+
+  <figure class="prompt">
+    <figcaption>三行驗證</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>git status
+git diff --cached
+git check-ignore -v models/test.gguf</code></pre>
+  </figure>
+
+  <p><code>git status</code> 不應該出現 <code>.gguf</code>、<code>.env</code> 等檔案。<code>git diff --cached</code> 確認暫存區裡沒有不該提交的東西。<code>git check-ignore</code> 有輸出就代表該檔案確實被忽略了。</p>
+
+  <h2 id="ollama-安全設定">Ollama 安全設定</h2>
+
+  <div class="callout">
+    <strong>Ollama 預設只綁定 127.0.0.1</strong>，意思是只有本機連得到它。不要把它改成 <code>0.0.0.0</code>，那會讓同一個網路上的任何人都能存取你的模型。保持 Ollama 更新到最新版，不要把 port 11434 暴露到不信任的網路上。
+  </div>
+
+  <h2 id="最終驗收">最終驗收</h2>
+
+  <figure class="prompt">
+    <figcaption>完整驗收</figcaption>
+    <button class="copy-button" type="button">複製</button>
+    <pre><code>ollama list
+ollama ps
+curl http://localhost:11434/api/tags
+git status</code></pre>
+  </figure>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>症狀</th><th>回到哪一步</th></tr></thead>
+      <tbody>
+        <tr><td><code>ollama list</code> 是空的</td><td>STEP 2 的 <code>ollama pull</code> 沒有執行</td></tr>
+        <tr><td><code>curl</code> 顯示 connection refused</td><td>Ollama 沒有啟動，到「應用程式」打開它</td></tr>
+        <tr><td><code>git status</code> 出現 .gguf 檔</td><td>.gitignore 沒有正確設定</td></tr>
+        <tr><td>opencode 連不上本地模型</td><td>STEP 3 的 endpoint 或 model name 寫錯</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-label">知道何時該關</div>
+    知道什麼時候該關、怎麼確認沒有提交不該提交的東西，本地模型才是一個可長可久的選項。
+  </div>
+
+  <p class="note">本頁的版本號與套件名稱查核日為 2026-09-20。LM Studio v0.4.25（arm64, macOS ≥ 12）、Ollama v0.34.2（MIT 授權）。安裝前可用 <code>brew info &lt;名稱&gt;</code> 自行確認目前版本，各工具的官方文件為最終依據。</p>
+</section>
+
+
+<script>
+  /* 手機版表格：把表頭寫進每個儲存格的 data-label，配合 CSS 改為堆疊顯示 */
+  document.querySelectorAll('.table-wrap table').forEach(function (table) {
+    var heads = Array.prototype.map.call(table.querySelectorAll('thead th'), function (th) {
+      return th.textContent.trim();
+    });
+    if (!heads.length) return;
+    Array.prototype.forEach.call(table.querySelectorAll('tbody tr'), function (tr) {
+      Array.prototype.forEach.call(tr.children, function (cell, i) {
+        if (heads[i]) cell.setAttribute('data-label', heads[i]);
+      });
+    });
+  });
+
+  document.querySelectorAll('.copy-button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('code');
+      if (!code || !navigator.clipboard) return;
+      navigator.clipboard.writeText(code.innerText).then(function () {
+        var original = btn.textContent;
+        btn.textContent = '已複製';
+        setTimeout(function () { btn.textContent = original; }, 1600);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

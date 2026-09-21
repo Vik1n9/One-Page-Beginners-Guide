@@ -74,7 +74,7 @@ register: brand
 
 ## 適用範圍與例外
 
-本規格適用於以下七份指南，全部已轉為 Kami：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`。
+本規格適用於以下九份指南，全部已轉為 Kami：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
 
 **例外**：大阪旅遊系列（`osaka-2026-trip-guide.html`、`osaka-2026-day1/3/4/5.html`、`osaka-2026-yakuza-nights.html`、`usj-vip-guide.html`）是自成一格的暖紙質旅遊手冊設計，各自內嵌樣式，**不在本規格範圍內**，也不要用本規格去改它們。
 

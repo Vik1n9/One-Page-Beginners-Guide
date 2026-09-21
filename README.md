@@ -23,6 +23,8 @@
 | 10 | **DeepTutor 繁體中文文件站** | 依官方文件站架構重排的 50 頁改寫版：四種安裝方式、16 個聊天管道、CLI 命令參考與生態擴充，附側欄導覽與全站搜尋 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/deeptutor-docs/) |
 | 11 | **Omarchy 手冊繁體中文文件站** | 依 omarchy.org/manual 側欄順序重排的 51 頁譯本：入門導覽、快捷鍵總表、終端與開發工具到系統設定，附側欄導覽、目錄頁與章節切換 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/omarchy-docs/) |
 | 12 | **剛拆封的 Mac，要先做哪八件事？** | Apple 晶片新機上手八步：用 iPhone 登入 Apple 帳號、更新 macOS、Homebrew、ChatGPT 桌面 app、Ghostty、Docker Desktop、Git／Node.js／Python 到 GitHub 協作設定，附 Computer Use 介紹 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/mac-onboarding-guide.html) |
+| 13 | **換一個 AI，你的專案還在嗎？** | 六個步驟把 AI 專案從對話搬進資料夾：AGENTS.md 寫規矩、Skill 寫做法、MCP 與 Plugins 寫連線、repomix 打包交接、opencode 驗證可攜性 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/portable-ai-project-guide.html) |
+| 14 | **把網路拔掉，你的專案還跑得動嗎？** | Mac 本地模型完整教學：記憶體對照表、LM Studio 與 Ollama 安裝、把 opencode 引擎從雲端換成本機，附驗證指令與排查表 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/mac-local-llm-guide.html) |
 
 ## 設計系統
 
@@ -31,7 +33,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 - `.claude/skills/kami/references/design.md`：色票、字級、元件與減法視覺規則。
 - `.claude/skills/kami/assets/templates/long-doc.html`：長文模板（封面／目錄／章節／callout／表格／圖表）。
 
-採用 Kami 的七份指南（樣式內嵌於各自檔案，不依賴外部 CSS，可單獨分享與列印）：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`。
+採用 Kami 的九份指南（樣式內嵌於各自檔案，不依賴外部 CSS，可單獨分享與列印）：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
 
 美股頁的五個互動元件（複利試算、漲跌色對照、交割時間軸、碎股試算、停損模擬）與製作幕後／PCShop 的前後對照切換都保留，改用 Kami 的色票與版面重新設計。
 
@@ -54,6 +56,8 @@ Kami 設計系統的規格與模板內建在本倉庫：
 | `beauty-manual-ai-guide.html` | 美容儀器說明書三段 AI 接力筆記：翻譯、複驗校稿、排版與 QA 驗收（Kami 版面） |
 | `deeptutor-guide.html` | 港大 DeepTutor 論文科普改寫：AI 家教的個人化記憶架構（Kami 版面） |
 | `mac-onboarding-guide.html` | Apple 晶片 Mac 新機上手八步：Apple 帳號、系統更新、Homebrew、ChatGPT 桌面 app（Codex）、Ghostty、Docker Desktop、Git／Node.js／Python 與 GitHub 協作，末章介紹 Computer Use（Kami 版面） |
+| `portable-ai-project-guide.html` | 指南 13：六步把 AI 專案從對話搬進資料夾，AGENTS.md、Skill、MCP、repomix、opencode 驗證可攜性（Kami 版面） |
+| `mac-local-llm-guide.html` | 指南 14：Mac 本地模型教學，記憶體對照表、LM Studio、Ollama、opencode 引擎切換（Kami 版面） |
 | `deeptutor-docs/` | DeepTutor 繁體中文文件站（50 頁改寫版）：`index.html` 為首頁，`get-started/`、`explore/`、`ecosystem/`、`partners/`、`cli/` 為五個章節目錄，`assets/` 收共用樣式、搜尋索引與截圖 |
 | `omarchy-docs/` | Omarchy 手冊繁體中文譯本（51 頁）：`index.html` 為首頁（第 1 章歡迎），`toc.html` 為總目錄，50 章譯文頁平鋪於站根，`assets/` 收共用樣式（`styles.css`） |
 | `usj-vip-guide.html` | USJ 10/6 票券安心選購工具，整理 6 位成人最該先看的組合、活動查核與購票入園流程；同時作為大阪五天自由行的 Day 2 頁 |
