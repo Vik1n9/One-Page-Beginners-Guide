@@ -11,7 +11,7 @@
 
 | # | 指南 | 內容重點 | 線上閱讀 |
 |---|------|-----------|---------|
-| 1 | **美股第一課先學翻譯** | 用複委託當翻譯機，把台股的顏色、單位、煞車與時間換軌成美股規則 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html) |
+| 1 | **美股第一課：從看得懂的開始** | 看懂市場地圖、翻譯台股習慣、由近而遠建立能力圈，用分散與紀律讓看走眼時也輸得起 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html) |
 | 2 | **審圖總被退件？消防製圖人員的術前檢查** | 用 Codex 替每個案件建立病歷夾、工作守則、日誌與本機版本，AI 初審與人工複核分工把關 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/guide.html) |
 | 3 | **用 AI 從零到上線** | 9 份指南背後的 103 個 commits：計畫模式、誠實的工具揭露、可驗證的修正循環與推上 GitHub Pages | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/making-of.html) |
 | 4 | **組電腦最貴的不是顯卡，是選錯** | 把師傅腦中的「配伍禁忌」表搬進資料欄位：規格標籤、四條約束規則、手機優先版面與前後台分流 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/pcshop-ai-build-guide.html) |
@@ -49,7 +49,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 |------|------|
 | `PRODUCT.md` | 本站產品定位與後續改版必讀規則 |
 | `DESIGN.md` | 本站 Kami 視覺規格：色票、字級、元件、互動元件原則與例外頁面 |
-| `us-stocks-guide.html` | 美股複委託換軌指南：四步把台股習慣翻譯成美股規則（Kami 版面，含五個互動試算元件） |
+| `us-stocks-guide.html` | 美股入門指南：市場結構、交易時間、商品、複委託下單、稅務、IPO、避坑與學習順序（Kami 版面，含五個互動試算元件） |
 | `guide.html` | 消防審圖「術前檢查」工作流：案件病歷夾、AGENTS.md 守則、工作日誌、本機 Git 與人工複核（Kami 版面） |
 | `making-of.html` | 製作幕後：103 個 commits 背後的生產系統，從計畫模式到推上 GitHub Pages（Kami 版面） |
 | `pcshop-ai-build-guide.html` | PCShop 相容性過濾筆記：規格標籤、約束規則與手機優先版面（Kami 版面） |
