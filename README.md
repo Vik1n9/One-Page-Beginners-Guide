@@ -11,7 +11,7 @@
 
 | # | 指南 | 內容重點 | 線上閱讀 |
 |---|------|-----------|---------|
-| 1 | **美股第一課：先知道自己在買什麼** | 從市場結構、交易時間、個股與 ETF、複委託下單、稅務到新手避坑，先別買錯再談買對 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html) |
+| 1 | **美股第一課：從看得懂的開始** | 看懂市場地圖、翻譯台股習慣、由近而遠建立能力圈，用分散與紀律讓看走眼時也輸得起 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html) |
 | 2 | **審圖總被退件？消防製圖人員的術前檢查** | 用 Codex 替每個案件建立病歷夾、工作守則、日誌與本機版本，AI 初審與人工複核分工把關 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/guide.html) |
 | 3 | **用 AI 從零到上線** | 9 份指南背後的 103 個 commits：計畫模式、誠實的工具揭露、可驗證的修正循環與推上 GitHub Pages | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/making-of.html) |
 | 4 | **組電腦最貴的不是顯卡，是選錯** | 把師傅腦中的「配伍禁忌」表搬進資料欄位：規格標籤、四條約束規則、手機優先版面與前後台分流 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/pcshop-ai-build-guide.html) |
