@@ -571,6 +571,7 @@ code {
   margin-bottom: .7em;
 }
 .ch-body > h2:first-child { margin-top: 0; }
+.ch-body [id] { scroll-margin-top: calc(var(--bar-h) + 24px); }
 
 .ch-body ul,
 .ch-body ol { padding-left: 1.3em; }
@@ -789,6 +790,7 @@ figcaption {
 .share-us i { font-style: normal; font-family: var(--font-mono); font-weight: 500; font-size: 1.5rem; }
 .share-rest { flex: 1; color: var(--text-3); }
 .share p { margin: 0; }
+.share .share-cap { font-size: .78rem; color: var(--text-3); margin: -8px 0 14px; }
 
 /* ---- 力量對照 ---- */
 .forces {
