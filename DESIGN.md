@@ -74,7 +74,9 @@ register: brand
 
 ## 適用範圍與例外
 
-本規格適用於以下九份指南，全部已轉為 Kami：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
+本規格適用於以下八份指南，全部已轉為 Kami：`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
+
+**例外**：美股第一課新版放在 `us-stocks/`（同時部署到 Cloudflare `voriens.dev/us-stocks` 與 GitHub Pages），改用獨立的深色研究室視覺與單章轉場閱讀，**不在本規格範圍內**；舊的 `us-stocks-guide.html` 只剩轉址頁（轉到同站 `us-stocks/`）。
 
 **例外**：大阪旅遊系列（`osaka-2026-trip-guide.html`、`osaka-2026-day1/3/4/5.html`、`osaka-2026-yakuza-nights.html`、`usj-vip-guide.html`）是自成一格的暖紙質旅遊手冊設計，各自內嵌樣式，**不在本規格範圍內**，也不要用本規格去改它們。
 
@@ -82,9 +84,8 @@ register: brand
 
 ## 互動元件
 
-Kami 文件模板本身沒有互動元件規範。本站保留的互動（美股頁的複利試算、漲跌色對照、交割時間軸、碎股試算、停損模擬；製作幕後與 PCShop 的前後對照切換）以下列原則納入 Kami：
+Kami 文件模板本身沒有互動元件規範。本站保留的互動（製作幕後與 PCShop 的前後對照切換）以下列原則納入 Kami：
 
 - 面板用 `.panel`（ivory 底、無外框），滑桿 `accent-color` 用 ink-blue。
 - SVG 圖表只用 ink-blue（線）＋暖灰（輔助線）＋白底，不引入新色階。
-- 兩個語意性例外：漲跌顏色對照必須維持綠／紅（那是內容本身，不是裝飾）；停損觸發線用 Kami 已註冊的 `--breaking` 暖褐色系表示風險。
 - 互動只增強理解，不得成為讀到內容的前提；列印時切換鈕隱藏、預設展開。

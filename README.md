@@ -2,7 +2,7 @@
 
 本倉庫收錄各種主題的「一頁式」互動教學網頁。每份指南都是獨立、可直接在瀏覽器開啟的 HTML 檔案，無需後端伺服器或建置流程。
 
-全站指南（大阪旅遊系列除外）採用 **Kami** 文件設計系統：暖色 parchment 紙底、單一墨藍強調色、serif 主導的層級，封面 → 目錄 → 章節的長文結構，每頁自包含樣式、可直接列印或存 PDF。後續任何版面或視覺改版，請先讀：
+全站指南（大阪旅遊系列與美股第一課除外）採用 **Kami** 文件設計系統：暖色 parchment 紙底、單一墨藍強調色、serif 主導的層級，封面 → 目錄 → 章節的長文結構，每頁自包含樣式、可直接列印或存 PDF。後續任何版面或視覺改版，請先讀：
 
 1. `PRODUCT.md`：產品定位、讀者、品牌語氣、設計原則。
 2. `DESIGN.md`：Kami 視覺規則、元件與例外頁面說明。
@@ -11,7 +11,7 @@
 
 | # | 指南 | 內容重點 | 線上閱讀 |
 |---|------|-----------|---------|
-| 1 | **美股第一課：從看得懂的開始** | 看懂市場地圖、翻譯台股習慣、由近而遠建立能力圈，用分散與紀律讓看走眼時也輸得起 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html) |
+| 1 | **美股第一課：從看得懂的開始** | 看懂市場地圖、翻譯台股習慣、由近而遠建立能力圈，用分散與紀律讓看走眼時也輸得起 | [開啟](https://voriens.dev/us-stocks/)（[GitHub Pages 版](https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks/)） |
 | 2 | **審圖總被退件？消防製圖人員的術前檢查** | 用 Codex 替每個案件建立病歷夾、工作守則、日誌與本機版本，AI 初審與人工複核分工把關 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/guide.html) |
 | 3 | **用 AI 從零到上線** | 9 份指南背後的 103 個 commits：計畫模式、誠實的工具揭露、可驗證的修正循環與推上 GitHub Pages | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/making-of.html) |
 | 4 | **組電腦最貴的不是顯卡，是選錯** | 把師傅腦中的「配伍禁忌」表搬進資料欄位：規格標籤、四條約束規則、手機優先版面與前後台分流 | [開啟](https://vik1n9.github.io/One-Page-Beginners-Guide/pcshop-ai-build-guide.html) |
@@ -33,9 +33,11 @@ Kami 設計系統的規格與模板內建在本倉庫：
 - `.claude/skills/kami/references/design.md`：色票、字級、元件與減法視覺規則。
 - `.claude/skills/kami/assets/templates/long-doc.html`：長文模板（封面／目錄／章節／callout／表格／圖表）。
 
-採用 Kami 的九份指南（樣式內嵌於各自檔案，不依賴外部 CSS，可單獨分享與列印）：`us-stocks-guide.html`、`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
+採用 Kami 的八份指南（樣式內嵌於各自檔案，不依賴外部 CSS，可單獨分享與列印）：`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
 
-美股頁的五個互動元件（複利試算、漲跌色對照、交割時間軸、碎股試算、停損模擬）與製作幕後／PCShop 的前後對照切換都保留，改用 Kami 的色票與版面重新設計。
+製作幕後／PCShop 的前後對照切換保留，改用 Kami 的色票與版面重新設計。
+
+**美股第一課**放在 `us-stocks/`，同一份檔案同時部署到 Cloudflare（`voriens.dev/us-stocks`）與 GitHub Pages（`…/One-Page-Beginners-Guide/us-stocks/`），不套用 Kami：深色研究室視覺（近黑底、琥珀單一強調色、襯線標題、等寬數字，附淺色主題），一次只顯示一章，讀到章末繼續往下捲、按「下一章」或方向鍵，會以全螢幕載入轉場切到下一章。五個互動元件（複利試算、漲跌色對照、交割時間軸、碎股試算、停損模擬）都保留。腳本無法執行時，頁面退回連續長文；列印時展開全部章節。
 
 `deeptutor-docs/` 與 `omarchy-docs/` 是倉庫內的兩座多頁文件站：沿用 Kami 的色票與襯線層級，改用外部共用樣式（各站 `assets/styles.css`）；`deeptutor-docs/` 另有側欄／搜尋腳本（`assets/app.js`），皆無法單檔分享。
 
@@ -49,7 +51,9 @@ Kami 設計系統的規格與模板內建在本倉庫：
 |------|------|
 | `PRODUCT.md` | 本站產品定位與後續改版必讀規則 |
 | `DESIGN.md` | 本站 Kami 視覺規格：色票、字級、元件、互動元件原則與例外頁面 |
-| `us-stocks-guide.html` | 美股入門指南：市場結構、交易時間、商品、複委託下單、稅務、IPO、避坑與學習順序（Kami 版面，含五個互動試算元件） |
+| `us-stocks-guide.html` | 轉址頁：舊網址自動轉到同站的 `us-stocks/`（GitHub Pages 新版），保留章節錨點 |
+| `us-stocks/` | 美股第一課（新版）：`index.html`、`styles.css`、`app.js`。GitHub Pages 與 Cloudflare 共用這份檔案 |
+| `cloudflare-us-stocks/` | Cloudflare 部署設定：`wrangler.jsonc` 為 Workers 靜態資產設定（讀取 `../us-stocks`），`DEPLOY-TODO.md` 為首次部署的交接清單 |
 | `guide.html` | 消防審圖「術前檢查」工作流：案件病歷夾、AGENTS.md 守則、工作日誌、本機 Git 與人工複核（Kami 版面） |
 | `making-of.html` | 製作幕後：103 個 commits 背後的生產系統，從計畫模式到推上 GitHub Pages（Kami 版面） |
 | `pcshop-ai-build-guide.html` | PCShop 相容性過濾筆記：規格標籤、約束規則與手機優先版面（Kami 版面） |
@@ -72,3 +76,16 @@ Kami 設計系統的規格與模板內建在本倉庫：
 ## 部署
 
 本專案維持靜態 GitHub Pages 部署。修改 HTML/CSS/JS 後推送到 `main`，GitHub Pages 會使用同一批靜態檔案更新線上頁面。
+
+### 美股第一課（Cloudflare）
+
+頁面在 `us-stocks/`，GitHub Pages 隨 `main` 自動更新；Cloudflare 端由 `cloudflare-us-stocks/wrangler.jsonc` 以 Workers 靜態資產部署同一份檔案（無腳本、無建置，`assets.base_path` 為 `/us-stocks`），只接管 `voriens.dev/us-stocks` 與其下路徑。推送到 `main` 且變更到 `us-stocks/` 或 `cloudflare-us-stocks/` 時，`.github/workflows/deploy-us-stocks.yml` 會用 Wrangler 自動部署；也可在 Actions 頁手動執行。
+
+首次設定：
+
+1. `voriens.dev` 須是同一個 Cloudflare 帳號下的 zone。
+2. Cloudflare 建立 API Token（範本「Edit Cloudflare Workers」，限定該帳號與 `voriens.dev` zone）。
+3. GitHub repo → Settings → Secrets and variables → Actions，新增 `CLOUDFLARE_API_TOKEN` 與 `CLOUDFLARE_ACCOUNT_ID`。
+4. 路由要生效，`voriens.dev` 必須有一筆**已代理（橘色雲朵）**的 DNS 記錄。根網域若已有網站則不必動；若根網域目前什麼都沒有，需要先替它建一筆代理中的記錄（根網域其他路徑會由該記錄決定回應）。
+
+本機手動部署：`cd cloudflare-us-stocks && npx wrangler deploy`。本機預覽：`cd cloudflare-us-stocks && npx wrangler dev` 後開 `/us-stocks/`，或在倉庫根目錄執行任一靜態伺服器後開 `/us-stocks/`。
