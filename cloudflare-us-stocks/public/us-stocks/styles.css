@@ -13,7 +13,7 @@
   --ease-io: cubic-bezier(.7, 0, .2, 1);
 
   --measure: 40rem;
-  --wide: 56rem;
+  --wide: var(--measure); /* 單一欄寬：表格、卡片、面板與內文同寬，不再左右凸出 */
   --gutter: 20px;
   --bar-h: 56px;
   --radius: 14px;
@@ -468,18 +468,16 @@ code {
    ===================================================================== */
 .ch-head {
   position: relative;
-  max-width: var(--wide);
+  max-width: calc(var(--measure) + 2 * var(--gutter));
   margin: 0 auto;
-  padding: calc(var(--bar-h) + clamp(56px, 12vh, 140px)) var(--gutter) clamp(40px, 6vh, 64px);
+  padding: calc(var(--bar-h) + clamp(40px, 9vh, 110px)) var(--gutter) clamp(40px, 6vh, 64px);
 }
 .ch-num {
-  position: absolute;
-  right: var(--gutter);
-  top: calc(var(--bar-h) + clamp(16px, 5vh, 56px));
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: clamp(7rem, 20vw, 14rem);
+  font-size: clamp(4.5rem, 9vw, 7rem);
   line-height: .8;
+  margin-bottom: 18px;
   letter-spacing: -.04em;
   color: transparent;
   -webkit-text-stroke: 1.5px var(--line-2);
@@ -880,6 +878,8 @@ figcaption {
 .tbl tr.is-key td strong { color: var(--accent); font-family: var(--font-mono); font-weight: 500; }
 .tbl tr.is-key td:first-child strong { font-family: var(--font-sans); font-weight: 700; }
 .tbl-vs td:nth-child(2) { color: var(--text); }
+.tbl small { display: block; font-size: .74rem; font-weight: 400; color: var(--text-3); line-height: 1.5; }
+.tbl-times th, .tbl-times td { white-space: nowrap; padding-left: 16px; padding-right: 16px; }
 
 /* ---- 互動面板 ---- */
 .panel {
@@ -1187,7 +1187,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
 .stat-fig {
   font-family: var(--font-mono);
   font-weight: 500;
-  font-size: clamp(1.7rem, 3.4vw, 2.3rem);
+  font-size: clamp(1.5rem, 2.4vw, 1.75rem);
   line-height: 1.2;
   color: var(--accent);
   margin-bottom: 10px;
@@ -1339,7 +1339,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
 .alloc-why { grid-area: why; font-size: .92rem; color: var(--text-2); line-height: 1.7; }
 
 /* 複利 */
-.calc-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 28px; align-items: start; }
+.calc-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .calc-out .chart { height: 150px; }
 .readout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
 .readout .cell { background: var(--bg-2); border-radius: 12px; padding: 10px 12px; }
@@ -1359,7 +1359,7 @@ input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.15); }
    章末：完成標記＋拉動載入
    ===================================================================== */
 .ch-end {
-  max-width: var(--wide);
+  max-width: calc(var(--measure) + 2 * var(--gutter));
   margin: 0 auto;
   padding: clamp(64px, 12vh, 120px) var(--gutter) max(80px, 20vh);
   text-align: center;
@@ -1574,7 +1574,7 @@ kbd {
   .readout { grid-template-columns: minmax(0, 1fr); }
   .readout .cell { display: flex; justify-content: space-between; align-items: baseline; }
 
-  .ch-num { font-size: 7.5rem; opacity: .4; top: calc(var(--bar-h) + 8px); }
+  .ch-num { font-size: 4.5rem; margin-bottom: 14px; }
   .lead { font-size: 1.06rem; padding-left: 16px; }
 
   .forces-head { display: none; }
