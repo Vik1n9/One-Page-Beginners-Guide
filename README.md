@@ -52,7 +52,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 | `PRODUCT.md` | 本站產品定位與後續改版必讀規則 |
 | `DESIGN.md` | 本站 Kami 視覺規格：色票、字級、元件、互動元件原則與例外頁面 |
 | `us-stocks-guide.html` | 轉址頁：舊網址自動轉到 `https://voriens.dev/us-stocks/`，保留章節錨點 |
-| `cloudflare-us-stocks/` | 美股第一課（Cloudflare 版）：`public/us-stocks/` 為頁面（`index.html`、`styles.css`、`app.js`），`wrangler.jsonc` 為 Workers 靜態資產設定 |
+| `cloudflare-us-stocks/` | 美股第一課（Cloudflare 版）：`public/us-stocks/` 為頁面（`index.html`、`styles.css`、`app.js`），`wrangler.jsonc` 為 Workers 靜態資產設定，`DEPLOY-TODO.md` 為首次部署的交接清單 |
 | `guide.html` | 消防審圖「術前檢查」工作流：案件病歷夾、AGENTS.md 守則、工作日誌、本機 Git 與人工複核（Kami 版面） |
 | `making-of.html` | 製作幕後：103 個 commits 背後的生產系統，從計畫模式到推上 GitHub Pages（Kami 版面） |
 | `pcshop-ai-build-guide.html` | PCShop 相容性過濾筆記：規格標籤、約束規則與手機優先版面（Kami 版面） |
