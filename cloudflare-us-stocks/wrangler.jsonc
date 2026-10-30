@@ -1,0 +1,16 @@
+// 美股第一課 · Cloudflare Workers（純靜態資產，無腳本）
+// 只接管 voriens.dev/us-stocks 與其下路徑；根網域其他路徑不受影響。
+// 請求路徑原樣對應到 public/ 內的檔案，所以頁面放在 public/us-stocks/。
+{
+  "name": "voriens-us-stocks",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "voriens.dev/us-stocks", "zone_name": "voriens.dev" },
+    { "pattern": "voriens.dev/us-stocks/*", "zone_name": "voriens.dev" }
+  ],
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash"
+  }
+}

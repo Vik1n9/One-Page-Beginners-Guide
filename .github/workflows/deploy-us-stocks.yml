@@ -1,0 +1,26 @@
+name: Deploy us-stocks to Cloudflare
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cloudflare-us-stocks/**"
+      - ".github/workflows/deploy-us-stocks.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-us-stocks
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy with Wrangler
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: cloudflare-us-stocks
+          command: deploy
