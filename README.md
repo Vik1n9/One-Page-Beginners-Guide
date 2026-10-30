@@ -51,7 +51,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 |------|------|
 | `PRODUCT.md` | 本站產品定位與後續改版必讀規則 |
 | `DESIGN.md` | 本站 Kami 視覺規格：色票、字級、元件、互動元件原則與例外頁面 |
-| `us-stocks-guide.html` | 轉址頁：舊網址自動轉到 `https://voriens.dev/us-stocks/`，保留章節錨點 |
+| `us-stocks-guide.html` | 轉址頁：舊網址自動轉到同站的 `us-stocks/`（GitHub Pages 新版），保留章節錨點 |
 | `us-stocks/` | 美股第一課（新版）：`index.html`、`styles.css`、`app.js`。GitHub Pages 與 Cloudflare 共用這份檔案 |
 | `cloudflare-us-stocks/` | Cloudflare 部署設定：`wrangler.jsonc` 為 Workers 靜態資產設定（讀取 `../us-stocks`），`DEPLOY-TODO.md` 為首次部署的交接清單 |
 | `guide.html` | 消防審圖「術前檢查」工作流：案件病歷夾、AGENTS.md 守則、工作日誌、本機 Git 與人工複核（Kami 版面） |
