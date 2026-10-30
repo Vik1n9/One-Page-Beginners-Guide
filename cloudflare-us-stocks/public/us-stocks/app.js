@@ -597,7 +597,7 @@
     /* ---------- 碎股試算 ---------- */
     var fracAmt = $('fracAmt'), fracPick = $('fracPick');
     if (fracAmt) {
-      var RATE = 31.6, curTk = { tk: 'BRKB', price: 487 };
+      var RATE = 32.5, curTk = { tk: 'BRKB', price: 541.96 };
       var names = { BRKB: 'BRK.B', VOO: 'VOO', QQQM: 'QQQM' };
       var pickBtns = Array.prototype.slice.call(fracPick.querySelectorAll('button'));
       var frac = function () {
