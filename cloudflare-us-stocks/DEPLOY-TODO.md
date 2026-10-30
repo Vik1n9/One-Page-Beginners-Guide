@@ -7,10 +7,12 @@
 - 倉庫：`Vik1n9/One-Page-Beginners-Guide`
 - 分支：`claude/us-stocks-cloudflare-paged`（PR #49）
 - 目標網址：`https://voriens.dev/us-stocks/`
-- 部署內容：`cloudflare-us-stocks/` 資料夾
+- 同一份頁面也會在合併後出現在 GitHub Pages：`https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks/`（不需要額外部署）
+- 部署設定：`cloudflare-us-stocks/wrangler.jsonc`（在這個資料夾執行 wrangler）
   - 這是一個只有靜態檔案的 Worker（沒有 `main` 腳本）。
   - `wrangler.jsonc` 只登記兩條路由：`voriens.dev/us-stocks` 和 `voriens.dev/us-stocks/*`。根網域的其他路徑不受影響。
-  - 頁面檔案放在 `public/us-stocks/`。原因是請求路徑會原樣對應到 `public/` 底下，所以檔案要放在同名子資料夾裡。
+  - 頁面檔案在倉庫根目錄的 `us-stocks/`，GitHub Pages 與 Cloudflare 共用。`assets.directory` 指向 `../us-stocks`，`assets.base_path` 設為 `/us-stocks`，所以 `/us-stocks/app.js` 會對應到 `us-stocks/app.js`。
+  - `--dry-run` 會顯示「Will match assets: ../us-stocks/us-stocks」的警告。這個警告沒有算進 base_path，可以忽略：本機 `wrangler dev` 已驗證 `/us-stocks/` 回 200、`/us-stocks` 會 307 轉址。
 - 自動部署：PR 合併、推到 `main` 之後，`.github/workflows/deploy-us-stocks.yml` 會跑 `cloudflare/wrangler-action@v4`。這一步需要兩個 GitHub secrets。
 - **先後順序很重要**：PR 一合併，GitHub Pages 上的舊頁 `us-stocks-guide.html` 就會轉址到 voriens.dev。所以要**先讓 voriens.dev/us-stocks 上線並驗證，再合併 PR**。
 
@@ -42,7 +44,7 @@ git checkout claude/us-stocks-cloudflare-paged
 cd cloudflare-us-stocks
 export CLOUDFLARE_API_TOKEN=...   # 第 3 步建立的 token
 export CLOUDFLARE_ACCOUNT_ID=...  # 第 1 步記下的 Account ID
-npx wrangler@4 deploy --dry-run   # 應該列出兩條路由，並讀到 public/ 底下的 4 個檔案
+npx wrangler@4 deploy --dry-run   # 應該列出兩條路由，並讀到 ../us-stocks 底下的 4 個檔案
 npx wrangler@4 deploy
 ```
 
@@ -92,6 +94,7 @@ curl -sI https://voriens.dev/                     # 預期維持原狀，不應�
 - [ ] 等 GitHub Pages 重建完成（約 1–2 分鐘），確認舊網址會轉到新網址，而且章節錨點有保留：
   - `https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks-guide.html` → `https://voriens.dev/us-stocks/`
   - `…/us-stocks-guide.html#時間與規則` → `https://voriens.dev/us-stocks/#時間與規則`
+- [ ] GitHub Pages 版也能正常開啟：`https://vik1n9.github.io/One-Page-Beginners-Guide/us-stocks/`，章節切換與深連結都正常。
 
 ### 8. 回報
 

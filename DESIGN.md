@@ -76,7 +76,7 @@ register: brand
 
 本規格適用於以下八份指南，全部已轉為 Kami：`guide.html`、`making-of.html`、`pcshop-ai-build-guide.html`、`beauty-manual-ai-guide.html`、`deeptutor-guide.html`、`mac-onboarding-guide.html`、`portable-ai-project-guide.html`、`mac-local-llm-guide.html`。
 
-**例外**：美股第一課已移到 Cloudflare（`cloudflare-us-stocks/`，網址 `voriens.dev/us-stocks`），改用獨立的深色研究室視覺與單章轉場閱讀，**不在本規格範圍內**；舊的 `us-stocks-guide.html` 只剩轉址頁。
+**例外**：美股第一課新版放在 `us-stocks/`（同時部署到 Cloudflare `voriens.dev/us-stocks` 與 GitHub Pages），改用獨立的深色研究室視覺與單章轉場閱讀，**不在本規格範圍內**；舊的 `us-stocks-guide.html` 只剩轉址頁。
 
 **例外**：大阪旅遊系列（`osaka-2026-trip-guide.html`、`osaka-2026-day1/3/4/5.html`、`osaka-2026-yakuza-nights.html`、`usj-vip-guide.html`）是自成一格的暖紙質旅遊手冊設計，各自內嵌樣式，**不在本規格範圍內**，也不要用本規格去改它們。
 

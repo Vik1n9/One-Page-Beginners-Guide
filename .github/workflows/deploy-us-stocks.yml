@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "us-stocks/**"
       - "cloudflare-us-stocks/**"
       - ".github/workflows/deploy-us-stocks.yml"
   workflow_dispatch:
