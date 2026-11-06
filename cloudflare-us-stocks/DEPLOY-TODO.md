@@ -11,8 +11,8 @@
 - 部署設定：`cloudflare-us-stocks/wrangler.jsonc`（在這個資料夾執行 wrangler）
   - 這是一個只有靜態檔案的 Worker（沒有 `main` 腳本）。
   - `wrangler.jsonc` 只登記兩條路由：`voriens.dev/us-stocks` 和 `voriens.dev/us-stocks/*`。根網域的其他路徑不受影響。
-  - 頁面檔案在倉庫根目錄的 `us-stocks/`，GitHub Pages 與 Cloudflare 共用。`assets.directory` 指向 `../us-stocks`，`assets.base_path` 設為 `/us-stocks`，所以 `/us-stocks/app.js` 會對應到 `us-stocks/app.js`。
-  - `--dry-run` 會顯示「Will match assets: ../us-stocks/us-stocks」的警告。這個警告沒有算進 base_path，可以忽略：本機 `wrangler dev` 已驗證 `/us-stocks/` 回 200、`/us-stocks` 會 307 轉址。
+  - 頁面檔案在倉庫根目錄的 `us-stocks/`，GitHub Pages 與 Cloudflare 共用。`assets.directory` 指向 `./public`，`public/us-stocks` 是指向 `../../us-stocks` 的 symlink，請求路徑原樣對應，所以 `/us-stocks/app.js` 會對應到 `us-stocks/app.js`。
+  - 不用 `assets.base_path`：此帳號未開放，部署會回 `A non-root assets.base_path is not enabled for this account. [code: 100343]`。
 - 自動部署：PR 合併、推到 `main` 之後，`.github/workflows/deploy-us-stocks.yml` 會跑 `cloudflare/wrangler-action@v4`。這一步需要兩個 GitHub secrets。若 PR 在 secrets 設好之前就合併，這次 workflow 會失敗（紅叉），不影響 GitHub Pages；設好 secrets 後到 Actions 手動重跑即可。
 - **沒有先後順序限制**：舊頁 `us-stocks-guide.html` 轉到同站的 GitHub Pages 新版，不依賴 Cloudflare。PR 合併與 Cloudflare 部署可以各自進行。
 
@@ -44,7 +44,7 @@ git checkout claude/us-stocks-cloudflare-paged
 cd cloudflare-us-stocks
 export CLOUDFLARE_API_TOKEN=...   # 第 3 步建立的 token
 export CLOUDFLARE_ACCOUNT_ID=...  # 第 1 步記下的 Account ID
-npx wrangler@4 deploy --dry-run   # 應該列出兩條路由，並讀到 ../us-stocks 底下的 4 個檔案
+npx wrangler@4 deploy --dry-run   # 應該列出兩條路由，並讀到 public/ 底下的檔案（public/us-stocks 是 symlink）
 npx wrangler@4 deploy
 ```
 
