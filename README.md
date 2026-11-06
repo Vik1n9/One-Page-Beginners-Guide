@@ -53,7 +53,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 | `DESIGN.md` | 本站 Kami 視覺規格：色票、字級、元件、互動元件原則與例外頁面 |
 | `us-stocks-guide.html` | 轉址頁：舊網址自動轉到同站的 `us-stocks/`（GitHub Pages 新版），保留章節錨點 |
 | `us-stocks/` | 美股第一課（新版）：`index.html`、`styles.css`、`app.js`。GitHub Pages 與 Cloudflare 共用這份檔案 |
-| `cloudflare-us-stocks/` | Cloudflare 部署設定：`wrangler.jsonc` 為 Workers 靜態資產設定（讀取 `../us-stocks`），`DEPLOY-TODO.md` 為首次部署的交接清單 |
+| `cloudflare-us-stocks/` | Cloudflare 部署設定：`wrangler.jsonc` 為 Workers 靜態資產設定（讀取 `public/`，其中 `public/us-stocks` 是指向 `us-stocks/` 的 symlink），`DEPLOY-TODO.md` 為首次部署的交接清單 |
 | `guide.html` | 消防審圖「術前檢查」工作流：案件病歷夾、AGENTS.md 守則、工作日誌、本機 Git 與人工複核（Kami 版面） |
 | `making-of.html` | 製作幕後：103 個 commits 背後的生產系統，從計畫模式到推上 GitHub Pages（Kami 版面） |
 | `pcshop-ai-build-guide.html` | PCShop 相容性過濾筆記：規格標籤、約束規則與手機優先版面（Kami 版面） |
@@ -79,7 +79,7 @@ Kami 設計系統的規格與模板內建在本倉庫：
 
 ### 美股第一課（Cloudflare）
 
-頁面在 `us-stocks/`，GitHub Pages 隨 `main` 自動更新；Cloudflare 端由 `cloudflare-us-stocks/wrangler.jsonc` 以 Workers 靜態資產部署同一份檔案（無腳本、無建置，`assets.base_path` 為 `/us-stocks`），只接管 `voriens.dev/us-stocks` 與其下路徑。推送到 `main` 且變更到 `us-stocks/` 或 `cloudflare-us-stocks/` 時，`.github/workflows/deploy-us-stocks.yml` 會用 Wrangler 自動部署；也可在 Actions 頁手動執行。
+頁面在 `us-stocks/`，GitHub Pages 隨 `main` 自動更新；Cloudflare 端由 `cloudflare-us-stocks/wrangler.jsonc` 以 Workers 靜態資產部署同一份檔案（無腳本、無建置；`public/us-stocks` 是指向 `us-stocks/` 的 symlink，請求路徑原樣對應），只接管 `voriens.dev/us-stocks` 與其下路徑。推送到 `main` 且變更到 `us-stocks/` 或 `cloudflare-us-stocks/` 時，`.github/workflows/deploy-us-stocks.yml` 會用 Wrangler 自動部署；也可在 Actions 頁手動執行。
 
 首次設定：
 

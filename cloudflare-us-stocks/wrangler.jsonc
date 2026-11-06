@@ -1,7 +1,8 @@
 // 美股第一課 · Cloudflare Workers（純靜態資產，無腳本）
 // 只接管 voriens.dev/us-stocks 與其下路徑；根網域其他路徑不受影響。
 // 頁面檔案放在倉庫根目錄的 us-stocks/，GitHub Pages 與 Cloudflare 共用同一份。
-// base_path 讓 /us-stocks/xxx 對應到 us-stocks/xxx。
+// 請求路徑原樣對應到 public/ 內的檔案；public/us-stocks 是指向 ../../us-stocks 的 symlink。
+// 不用 assets.base_path：此帳號未開放（API code 100343）。
 {
   "name": "voriens-us-stocks",
   "compatibility_date": "2026-10-01",
@@ -11,8 +12,7 @@
     { "pattern": "voriens.dev/us-stocks/*", "zone_name": "voriens.dev" }
   ],
   "assets": {
-    "directory": "../us-stocks",
-    "base_path": "/us-stocks",
+    "directory": "./public",
     "html_handling": "auto-trailing-slash"
   }
 }
